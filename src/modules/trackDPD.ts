@@ -18,6 +18,11 @@ const trackDPD = async (packageNum: string) => {
         var pcgs: string[] = []
         var tempPcgs: string[] = []
 
+        var correctNumber: string = $('p').text()
+        if (correctNumber.startsWith('Wprowadzono błędny numer przesyłki') == false) {
+            correctNumber = ''
+        }
+
         $('td').each(function () {
             tempPcgs.push($(this).text())
         })
@@ -37,7 +42,7 @@ const trackDPD = async (packageNum: string) => {
                 pcgs.push(val)
             }
         }
-        return pcgs
+        return [pcgs, correctNumber]
     })
 
     await browser.close()

@@ -17,6 +17,7 @@ const trackGLS = async (packageNum: string) => {
     let packages = await page.evaluate(() => {
         var pcgs: string[] = []
         var tempPcgs: string[] = []
+        const correctNumber: any = $('p.mb-0').text()
         $('div.history-list-item-data').each(function () {
             tempPcgs.push($(this).text())
         })
@@ -30,7 +31,7 @@ const trackGLS = async (packageNum: string) => {
                 pcgs.push(val[3])
             }
         }
-        return pcgs
+        return [pcgs, correctNumber]
     })
 
     await browser.close()

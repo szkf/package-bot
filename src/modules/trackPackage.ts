@@ -12,14 +12,14 @@ const trackPackage = async (packageNum: string, courier: string) => {
         case 'gls':
             status = await trackGLS(packageNum)
             break
-        default:
-            throw `We don't support the courier "${courier}"!\n
-            Type \`p!couriers\` to see which couriers we support!`
     }
-    if (status == []) {
-        throw 'Incorrect'
+
+    if (status[1] != '') {
+        throw new Error(`Incorrect ${courier} package tracking number (${packageNum})!
+Make sure to check if the package number is correct!`).message
     }
-    return status
+
+    return status[0]
 }
 
 module.exports = trackPackage
