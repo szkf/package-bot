@@ -1,12 +1,13 @@
 export {}
 
-import { Client, Message, MessageEmbed, MessageReaction, TextChannel } from 'discord.js'
+import { Message, MessageEmbed, MessageReaction, TextChannel } from 'discord.js'
 
 const Discord = require('discord.js')
+const client = require('../PackageBot')
 
 import sendStatus from './sendStatus'
 
-const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: TextChannel, client: Client, pcgNumList: string[] = []) => {
+const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: TextChannel, pcgNumList: string[] = []) => {
     var returnVal: any = { timedOut: true }
 
     await channel.send(embed).then(async (message: Message) => {
@@ -76,17 +77,20 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
             const letters: string[] = ['🇦', '🇧', '🇨', '🇩', '🇪']
             var selectedList: string[] = []
 
-            const reactionAddListner = async (reaction: MessageReaction) => {
+            const reactionAddListner = async (reaction: MessageReaction, user: any) => {
                 if (reaction.message.id == message.id) {
                     if (letters.includes(reaction.emoji.name) && reactions.includes(reaction.emoji.name)) {
                         resetTimeout()
+
                         var index: number = letters.indexOf(reaction.emoji.name)
                         selectedList.push(pcgNumList[index])
                     }
                     if (reaction.emoji.name == '🗑️') {
                         resetTimeout()
+
                         if (selectedList.length == 0) {
                             sendStatus('ERROR', channel, 'Select the packages to delete!', { timeout: 5000 })
+                            message.reactions.cache.get('🗑️')!.users.remove(user.id)
                         } else {
                             client.removeListener('messageReactionRemove', reactionRemoveListner)
                             client.removeListener('messageReactionAdd', reactionAddListner)
@@ -104,22 +108,9 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
                 if (reaction.message.id == message.id) {
                     if (letters.includes(reaction.emoji.name) && reactions.includes(reaction.emoji.name)) {
                         resetTimeout()
+
                         var index: number = letters.indexOf(reaction.emoji.name)
                         selectedList.splice(selectedList.indexOf(pcgNumList[index]), 1)
-                    }
-                    if (reaction.emoji.name == '🗑️') {
-                        resetTimeout()
-                        if (selectedList.length == 0) {
-                            sendStatus('ERROR', channel, 'Select the packages to delete!', { timeout: 5000 })
-                        } else {
-                            client.removeListener('messageReactionAdd', reactionAddListner)
-                            client.removeListener('messageReactionRemove', reactionRemoveListner)
-                            message.delete()
-                            clearInterval(timeoutInterval)
-                            clearTimeout(messageTimeout)
-                            returnVal = { action: 'DELETE', selectedList: selectedList }
-                            resolve()
-                        }
                     }
                 }
             }

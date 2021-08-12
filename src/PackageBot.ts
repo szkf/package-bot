@@ -19,11 +19,6 @@ mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedT
     console.log(err)
 })
 
-const { Package } = require('./modules/packageClass')
-const addPackage = require('./modules/addPackage')
-const sendMessage = require('./modules/sendMessage')
-const showList = require('./modules/showList')
-
 /*
 ;(async () => {
     console.log('asdf')
@@ -31,6 +26,9 @@ const showList = require('./modules/showList')
     console.log(asdf)
 })()
 */
+
+//client.commands = new Collection()
+//client.commands.set(showList.help.name, showList)
 
 client.once('ready', async () => {
     console.log('\x1b[32m' + '\x1b[1m' + 'PackageBot is ready!' + '\x1b[0m')
@@ -47,8 +45,17 @@ client.on('message', async (message: any) => {
         }
     }
     if (message.content == 'pt!test') {
-        showList(message.channel, client)
+        showList(message.channel)
     }
 })
 
 client.login(token)
+
+module.exports = client
+
+// load after client export
+
+var { Package } = require('./modules/packageClass')
+var addPackage = require('./modules/addPackage')
+//var sendMessage = require('./modules/sendMessage')
+var showList = require('./modules/showList')
