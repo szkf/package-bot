@@ -1,12 +1,13 @@
 import { Client, EmbedField, MessageEmbed, TextChannel } from 'discord.js'
+import deletePackage from './deletePackage'
 import sendMessage from './sendMessage'
 import sendStatus from './sendStatus'
 
 export {}
 
+const Discord = require('discord.js')
 const paginateList = require('./paginateList')
 const getPackage = require('./getPackage')
-const Discord = require('discord.js')
 
 const showList = async (channel: TextChannel, client: Client, page: number = 0) => {
     var packageList = await getPackage()
@@ -25,11 +26,16 @@ list or add it via the tracking GUI by typing \`p!track <package number> <courie
     }
 
     const letterList: string[] = ['A', 'B', 'C', 'D', 'E']
+    var reactionList: string[] = ['🇦', '🇧', '🇨', '🇩', '🇪']
 
+    var pcgNumList: string[] = []
     var listFields: EmbedField[] = []
     for (var i: number = 0; i < packageList[page].length; i++) {
         var letter = letterList[i]
         var pcg = packageList[page][i]
+
+        pcgNumList.push(pcg.packageNum)
+
         listFields.push({
             name: `----------------------------------------------`,
             value: `**${letter}. ${pcg.courier.toUpperCase()} Package Number ${pcg.packageNum}:**\n${pcg.note}`,
@@ -68,11 +74,16 @@ list or add it via the tracking GUI by typing \`p!track <package number> <courie
         .addFields(listFields)
         .setFooter(`Page ${page + 1}/${packageList.length}`)
 
-    const returnValue = await sendMessage(listEmbed, ['🇦', '🇧', '🇨', '🇩', '🇪'], channel, client)
+    reactionList.splice(packageList[page].length)
+    reactionList.push('🗑️')
 
-    if (returnValue.timedOut == true) return
+    const returnValue = await sendMessage(listEmbed, reactionList, channel, client, pcgNumList)
+
+    if (returnValue.timedOut) return
 
     if (returnValue.action == 'DELETE') {
+        await deletePackage(returnValue.selectedList)
+        showList(channel, client, page)
     }
 }
 

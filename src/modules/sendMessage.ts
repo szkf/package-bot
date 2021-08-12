@@ -6,7 +6,7 @@ const Discord = require('discord.js')
 
 import sendStatus from './sendStatus'
 
-const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: TextChannel, client: Client) => {
+const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: TextChannel, client: Client, pcgNumList: string[] = []) => {
     var returnVal: any = { timedOut: true }
 
     await channel.send(embed).then(async (message: Message) => {
@@ -15,6 +15,7 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
                 await message.react(reactions[i])
             }
 
+            var sentTimeoutMessage = false
             const inactiveColors: string[] = ['RED', 'ORANGE', 'GOLD', 'YELLOW']
             var timeoutInterval: any
 
@@ -29,6 +30,8 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
                     inactiveEmbed.setTitle(`This message will auto-delete in ${counter} seconds because of inactivity!`)
                     message.edit(inactiveEmbed)
 
+                    sentTimeoutMessage = true
+
                     if (counter == 0) {
                         message.delete()
                         clearInterval(timeoutInterval)
@@ -41,7 +44,12 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
             const resetTimeout = () => {
                 clearTimeout(messageTimeout)
                 clearInterval(timeoutInterval)
-                message.edit(embed)
+
+                if (sentTimeoutMessage) {
+                    message.edit(embed)
+                    sentTimeoutMessage = false
+                }
+
                 messageTimeout = setTimeout(() => {
                     var counter: number = 3
                     timeoutInterval = setInterval(() => {
@@ -49,6 +57,9 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
 
                         inactiveEmbed.setTitle(`This message will auto-delete in ${counter} seconds because of inactivity!`)
                         message.edit(inactiveEmbed)
+
+                        sentTimeoutMessage = true
+
                         if (counter == 1) {
                             inactiveEmbed.setColor('ORANGE')
                         }
@@ -63,14 +74,14 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
             }
 
             const letters: string[] = ['🇦', '🇧', '🇨', '🇩', '🇪']
-            var selectedList: number[] = []
+            var selectedList: string[] = []
 
             const reactionAddListner = async (reaction: MessageReaction) => {
                 if (reaction.message.id == message.id) {
                     if (letters.includes(reaction.emoji.name) && reactions.includes(reaction.emoji.name)) {
                         resetTimeout()
                         var index: number = letters.indexOf(reaction.emoji.name)
-                        selectedList.push(index)
+                        selectedList.push(pcgNumList[index])
                     }
                     if (reaction.emoji.name == '🗑️') {
                         resetTimeout()
@@ -94,7 +105,7 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
                     if (letters.includes(reaction.emoji.name) && reactions.includes(reaction.emoji.name)) {
                         resetTimeout()
                         var index: number = letters.indexOf(reaction.emoji.name)
-                        selectedList.splice(selectedList.indexOf(index), 1)
+                        selectedList.splice(selectedList.indexOf(pcgNumList[index]), 1)
                     }
                     if (reaction.emoji.name == '🗑️') {
                         resetTimeout()

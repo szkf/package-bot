@@ -32,9 +32,6 @@ const showList = require('./modules/showList')
 })()
 */
 
-//client.commands = new Collection()
-//client.commands.set(sendMessage.help.name, sendMessage)
-
 client.once('ready', async () => {
     console.log('\x1b[32m' + '\x1b[1m' + 'PackageBot is ready!' + '\x1b[0m')
 })
@@ -50,8 +47,6 @@ client.on('message', async (message: any) => {
         }
     }
     if (message.content == 'pt!test') {
-        //const command = client.commands.get('sendMessage')
-        //command.run
         showList(message.channel, client)
     }
 })
