@@ -29,6 +29,7 @@ Its the newest technique of double tracking! It tells ya that the status changed
     try {
         await pcg.save()
         console.log('\x1b[34mAdded Package!\x1b[0m')
+
         return
     } catch (err) {
         console.log(err)
