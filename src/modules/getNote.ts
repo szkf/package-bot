@@ -74,6 +74,8 @@ const getNote = (channel: TextChannel) => {
                     resetTimeout()
 
                     if (msg.content.split(`${prefix}note `)[1] != '' && msg.content.split(`${prefix}note `)[1].length <= 40) {
+                        client.removeListener('message', messageListner)
+                        message.delete()
                         resolve(msg.content.split(`${prefix}note `)[1])
                     } else {
                         sendStatus(
