@@ -23,7 +23,14 @@ class Package implements PackageInterface {
     note: string
 
     constructor(data: packageData) {
+        if (data.packageNum == undefined) {
+            throw new Error('You did not specify the package number!\nProper usage `(p!add / p!track) <package number> <courier>`')
+        }
+
         if (data.courier != 'dpd' && data.courier != 'gls') {
+            if (data.courier == undefined) {
+                throw new Error(`You did not specify the courier!\nProper usage \`(p!add / p!track) <package number> <courier>\``).message
+            }
             throw new Error(`We don't support the courier "${data.courier}"!
 Type \`p!couriers\` to see which couriers we support!`).message
         }
