@@ -71,7 +71,7 @@ const showPackage = async (pcg: PackageInterface, channel: TextChannel, status: 
     if (returnValue.timedOut) return
 
     switch (returnValue.action) {
-        case 'ADD':
+        case 'CONFIRM':
             try {
                 await addPackage(pcg, channel)
                 sendStatus('SUCCESS', channel, `Succesfully added a package to your tracking list!\nType \`${prefix}list\` to view it!`, {})
