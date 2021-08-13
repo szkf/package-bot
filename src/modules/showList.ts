@@ -27,7 +27,7 @@ list or add it via the tracking GUI by typing \`p!track <package number> <courie
 
     const letterList: string[] = ['A', 'B', 'C', 'D', 'E']
 
-    var pcgNumList: string[] = []
+    var pcgNumList: any = []
     var listFields: EmbedField[] = []
 
     for (var i: number = 0; i < packageList[page].length; i++) {
@@ -85,7 +85,7 @@ list or add it via the tracking GUI by typing \`p!track <package number> <courie
         reactionList.push('➡️')
     }
 
-    const returnValue = await sendMessage(listEmbed, reactionList, channel, pcgNumList)
+    const returnValue = await sendMessage(listEmbed, reactionList, channel, { pcgNumList: pcgNumList })
 
     if (returnValue.timedOut) return
 
@@ -94,10 +94,10 @@ list or add it via the tracking GUI by typing \`p!track <package number> <courie
             await deletePackage(returnValue.selectedList)
             showList(channel, page)
             return
-        case 'NEXT-PAGE':
+        case 'NEXT':
             showList(channel, page + 1)
             return
-        case 'PREVIOUS-PAGE':
+        case 'PREVIOUS':
             showList(channel, page - 1)
             return
     }
