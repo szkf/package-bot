@@ -24,7 +24,7 @@ class Package implements PackageInterface {
 
     constructor(data: packageData) {
         if (data.packageNum == undefined) {
-            throw new Error('You did not specify the package number!\nProper usage `(p!add / p!track) <package number> <courier>`')
+            throw new Error('You did not specify the package number!\nProper usage `(p!add / p!track) <package number> <courier>`').message
         }
 
         if (data.courier != 'dpd' && data.courier != 'gls') {
