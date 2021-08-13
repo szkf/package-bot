@@ -1,24 +1,33 @@
 export {}
 
+import { TextChannel } from 'discord.js'
 import { PackageInterface } from './packageClass'
 const { PackageModel } = require('./packageClass')
 const getPackage = require('./getPackage')
+const getNote = require('./getNote')
 
-const addPackage = async (data: PackageInterface, debug: boolean = false) => {
+const addPackage = async (data: PackageInterface, channel: TextChannel, debug: boolean = false) => {
     const pcgExists = await getPackage(data.packageNum)
 
     if (debug == false) {
         if (pcgExists != null) {
             throw new Error(`The package you trying to add to the list is already in it!
-Its the newest technique of double tracking! It tells ya that the status changed two times to remind ya!`).message
+{footer}Its the newest technique of double tracking! It tells ya that the status changed two times to remind ya!`).message
         }
 
         try {
             await data.getCurrentStatus()
         } catch (err) {
-            console.log(err)
-            return new Error(err).message
+            throw new Error(err).message
         }
+
+        const note = await getNote(channel)
+
+        if (note == undefined) {
+            throw new Error('No note added!\nFalied to add package to list.').message
+        }
+
+        data.note = note
     }
 
     const pcg = new PackageModel({

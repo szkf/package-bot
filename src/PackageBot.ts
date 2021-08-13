@@ -1,5 +1,7 @@
 //import { Collection } from 'discord.js'
 
+import sendStatus from './modules/sendStatus'
+
 const Discord = require('discord.js')
 const { debugPrefix, prefix } = require('../config.json')
 const mongoose = require('mongoose')
@@ -37,11 +39,24 @@ client.once('ready', async () => {
 client.on('message', async (message: any) => {
     if (message.content.toLowerCase().startsWith(`${prefix}add`)) {
         try {
-            const pcg = new Package({ packageNum: '0000293235010U', courier: 'dpd', note: 'Cool note!' })
+            const command = message.content.toLowerCase().split(' ')
+            const pcg = new Package({ packageNum: command[1], courier: command[2] })
 
-            await addPackage(pcg)
+            await addPackage(pcg, message.channel)
+
+            sendStatus(
+                'SUCCESS',
+                message.channel,
+                `Succesfully added a package to your tracking list!\nType \`${prefix}list\` to view it!`,
+                { timeout: 10000 }
+            )
         } catch (err) {
-            message.channel.send(err)
+            const errorFooter = err.split('{footer}')[1]
+            if (errorFooter != undefined) {
+                sendStatus('ERROR', message.channel, err.split('{footer}')[0], { timeout: 5000, footer: errorFooter })
+            } else {
+                sendStatus('ERROR', message.channel, err.toString(), { timeout: 5000 })
+            }
         }
     }
     if (message.content.toLowerCase().startsWith(`${debugPrefix} add`)) {
@@ -49,7 +64,7 @@ client.on('message', async (message: any) => {
 
         for (var i: number = 1; i <= addAmount; i++) {
             var pcg = new Package({ packageNum: i, courier: 'dpd', note: i.toString() })
-            await addPackage(pcg, true)
+            await addPackage(pcg, message.channel, true)
         }
     }
     if (message.content.toLowerCase().startsWith(`${prefix}list`)) {
