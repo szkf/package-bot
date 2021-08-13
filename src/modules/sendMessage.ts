@@ -28,7 +28,7 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
 
             var messageTimeout = setTimeout(() => {
                 var counter: number = 3
-                timeoutInterval = setInterval(() => {
+                timeoutInterval = setInterval(async () => {
                     inactiveEmbed.setColor(inactiveColors[counter])
 
                     inactiveEmbed.setTitle(`This message will auto-delete in ${counter} seconds because of inactivity!`)
@@ -39,7 +39,9 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
                     if (counter == 0) {
                         client.removeListener('messageReactionRemove', reactionRemoveListner)
                         client.removeListener('messageReactionAdd', reactionAddListner)
-                        message.delete()
+                        if (message.deletable == true) {
+                            await message.delete()
+                        }
                         clearInterval(timeoutInterval)
                         resolve()
                     }
@@ -58,7 +60,7 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
 
                 messageTimeout = setTimeout(() => {
                     var counter: number = 3
-                    timeoutInterval = setInterval(() => {
+                    timeoutInterval = setInterval(async () => {
                         inactiveEmbed.setColor(inactiveColors[counter])
 
                         inactiveEmbed.setTitle(`This message will auto-delete in ${counter} seconds because of inactivity!`)
@@ -72,7 +74,9 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
                         if (counter == 0) {
                             client.removeListener('messageReactionRemove', reactionRemoveListner)
                             client.removeListener('messageReactionAdd', reactionAddListner)
-                            message.delete()
+                            if (message.deletable == true) {
+                                await message.delete()
+                            }
                             clearInterval(timeoutInterval)
                             resolve()
                         }
@@ -103,7 +107,9 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
                             client.removeListener('messageReactionAdd', reactionAddListner)
                             clearInterval(timeoutInterval)
                             clearTimeout(messageTimeout)
-                            message.delete()
+                            if (message.deletable == true) {
+                                await message.delete()
+                            }
 
                             returnVal = { action: 'DELETE', selectedList: selectedList }
                             resolve()
@@ -118,7 +124,9 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
                         client.removeListener('messageReactionAdd', reactionAddListner)
                         clearInterval(timeoutInterval)
                         clearTimeout(messageTimeout)
-                        message.delete()
+                        if (message.deletable == true) {
+                            await message.delete()
+                        }
 
                         returnVal = { action: 'NEXT-PAGE' }
                         resolve()
@@ -130,7 +138,9 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
 
                         client.removeListener('messageReactionRemove', reactionRemoveListner)
                         client.removeListener('messageReactionAdd', reactionAddListner)
-                        message.delete()
+                        if (message.deletable == true) {
+                            await message.delete()
+                        }
                         clearInterval(timeoutInterval)
                         clearTimeout(messageTimeout)
                         returnVal = { action: 'PREVIOUS-PAGE' }
@@ -154,7 +164,6 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
             client.on('messageReactionRemove', reactionRemoveListner)
         })
     })
-
     return returnVal
 }
 
