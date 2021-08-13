@@ -8,6 +8,7 @@ export {}
 const Discord = require('discord.js')
 const paginateList = require('./paginateList')
 const getPackage = require('./getPackage')
+const { prefix } = require('../../config.json')
 
 const showList = async (channel: TextChannel, page: number = 0) => {
     var packageList = await getPackage()
@@ -93,6 +94,38 @@ list or add it via the tracking GUI by typing \`p!track <package number> <courie
         case 'DELETE':
             await deletePackage(returnValue.selectedList)
             showList(channel, page)
+            return
+        case 'DELETE-ALL':
+            const deleteEmbed: MessageEmbed = new Discord.MessageEmbed()
+            deleteEmbed
+                .setTitle('Are you sure you want to delete all packages from your tracking list?')
+                .setDescription('React with ✅ to confirm!\nReact with ❌ to cancel!')
+                .setFooter('NOTE! Deleting every package IS PERMANENT!')
+                .setColor('YELLOW')
+
+            const returnVal = await sendMessage(deleteEmbed, ['✅', '❌'], channel, {})
+
+            if (returnVal.timedOut) return
+
+            switch (returnVal.action) {
+                case 'CONFIRM':
+                    await deletePackage([])
+                    const successMessage = `Deleted every package in your tracking list!
+Type \`${prefix}add <package number> <courier>\` to add a package to your tracking list or add it via the tracking GUI by tying \`${prefix}track <package number> <courier>\`!`
+
+                    sendStatus('SUCCESS', channel, successMessage, {})
+                    return
+                case 'CANCEL':
+                    await sendStatus('SUCCESS', channel, 'You will be taken back to your tracking list in 5 seconds! 📦', {
+                        title: 'Canceled deleting every package from your tracking list!',
+                        footer: 'Your packages are in a safe place!',
+                        timeout: 5000,
+                    })
+
+                    showList(channel)
+                    return
+            }
+
             return
         case 'NEXT':
             showList(channel, page + 1)
