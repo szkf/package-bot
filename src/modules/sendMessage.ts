@@ -7,7 +7,7 @@ const Discord = require('discord.js')
 import client from '../PackageBot'
 import sendStatus from './sendStatus'
 
-const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: TextChannel, pcgNumList: string[] = []) => {
+const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: TextChannel, { pcgNumList = [], deleteOnTimeout = true }) => {
     var returnVal: any = { timedOut: true }
 
     await channel.send(embed).then(async (message: Message) => {
@@ -28,25 +28,30 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
 
             var messageTimeout = setTimeout(() => {
                 var counter: number = 3
-                timeoutInterval = setInterval(async () => {
-                    inactiveEmbed.setColor(inactiveColors[counter])
+                if (deleteOnTimeout == false) {
+                    message.reactions.removeAll()
+                } else {
+                    timeoutInterval = setInterval(async () => {
+                        inactiveEmbed.setColor(inactiveColors[counter])
 
-                    inactiveEmbed.setTitle(`This message will auto-delete in ${counter} seconds because of inactivity!`)
-                    message.edit(inactiveEmbed)
+                        inactiveEmbed.setTitle(`This message will auto-delete in ${counter} seconds because of inactivity!`)
+                        message.edit(inactiveEmbed)
 
-                    sentTimeoutMessage = true
+                        sentTimeoutMessage = true
 
-                    if (counter == 0) {
-                        client.removeListener('messageReactionRemove', reactionRemoveListner)
-                        client.removeListener('messageReactionAdd', reactionAddListner)
-                        if (message.deletable == true) {
-                            await message.delete()
+                        if (counter == 0) {
+                            client.removeListener('messageReactionRemove', reactionRemoveListner)
+                            client.removeListener('messageReactionAdd', reactionAddListner)
+                            if (message.deletable == true) {
+                                await message.delete()
+                            }
+
+                            clearInterval(timeoutInterval)
+                            resolve()
                         }
-                        clearInterval(timeoutInterval)
-                        resolve()
-                    }
-                    counter--
-                }, 1000)
+                        counter--
+                    }, 1000)
+                }
             }, 10000)
 
             const resetTimeout = () => {
@@ -60,28 +65,33 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
 
                 messageTimeout = setTimeout(() => {
                     var counter: number = 3
-                    timeoutInterval = setInterval(async () => {
-                        inactiveEmbed.setColor(inactiveColors[counter])
+                    if (deleteOnTimeout == false) {
+                        message.reactions.removeAll()
+                    } else {
+                        timeoutInterval = setInterval(async () => {
+                            inactiveEmbed.setColor(inactiveColors[counter])
 
-                        inactiveEmbed.setTitle(`This message will auto-delete in ${counter} seconds because of inactivity!`)
-                        message.edit(inactiveEmbed)
+                            inactiveEmbed.setTitle(`This message will auto-delete in ${counter} seconds because of inactivity!`)
+                            message.edit(inactiveEmbed)
 
-                        sentTimeoutMessage = true
+                            sentTimeoutMessage = true
 
-                        if (counter == 1) {
-                            inactiveEmbed.setColor('ORANGE')
-                        }
-                        if (counter == 0) {
-                            client.removeListener('messageReactionRemove', reactionRemoveListner)
-                            client.removeListener('messageReactionAdd', reactionAddListner)
-                            if (message.deletable == true) {
-                                await message.delete()
+                            if (counter == 1) {
+                                inactiveEmbed.setColor('ORANGE')
                             }
-                            clearInterval(timeoutInterval)
-                            resolve()
-                        }
-                        counter--
-                    }, 1000)
+                            if (counter == 0) {
+                                client.removeListener('messageReactionRemove', reactionRemoveListner)
+                                client.removeListener('messageReactionAdd', reactionAddListner)
+                                if (message.deletable == true && deleteOnTimeout == true) {
+                                    await message.delete()
+                                }
+
+                                clearInterval(timeoutInterval)
+                                resolve()
+                            }
+                            counter--
+                        }, 1000)
+                    }
                 }, 10000)
             }
 
@@ -118,7 +128,7 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
                     if (reaction.emoji.name == '➡️') {
                         resetTimeout()
 
-                        message.reactions.cache.get('🗑️')!.users.remove(user.id)
+                        message.reactions.cache.get('➡️')!.users.remove(user.id)
 
                         client.removeListener('messageReactionRemove', reactionRemoveListner)
                         client.removeListener('messageReactionAdd', reactionAddListner)
@@ -128,13 +138,13 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
                             await message.delete()
                         }
 
-                        returnVal = { action: 'NEXT-PAGE' }
+                        returnVal = { action: 'NEXT' }
                         resolve()
                     }
                     if (reaction.emoji.name == '⬅️') {
                         resetTimeout()
 
-                        message.reactions.cache.get('🗑️')!.users.remove(user.id)
+                        message.reactions.cache.get('⬅️')!.users.remove(user.id)
 
                         client.removeListener('messageReactionRemove', reactionRemoveListner)
                         client.removeListener('messageReactionAdd', reactionAddListner)
@@ -143,7 +153,33 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
                         }
                         clearInterval(timeoutInterval)
                         clearTimeout(messageTimeout)
-                        returnVal = { action: 'PREVIOUS-PAGE' }
+                        returnVal = { action: 'PREVIOUS' }
+                        resolve()
+                    }
+                    if (reaction.emoji.name == '✅') {
+                        resetTimeout()
+
+                        client.removeListener('messageReactionRemove', reactionRemoveListner)
+                        client.removeListener('messageReactionAdd', reactionAddListner)
+                        if (message.deletable == true) {
+                            await message.delete()
+                        }
+                        clearInterval(timeoutInterval)
+                        clearTimeout(messageTimeout)
+                        returnVal = { action: 'ADD' }
+                        resolve()
+                    }
+                    if (reaction.emoji.name == 'ℹ️') {
+                        resetTimeout()
+
+                        client.removeListener('messageReactionRemove', reactionRemoveListner)
+                        client.removeListener('messageReactionAdd', reactionAddListner)
+                        if (message.deletable == true) {
+                            await message.delete()
+                        }
+                        clearInterval(timeoutInterval)
+                        clearTimeout(messageTimeout)
+                        returnVal = { action: 'MORE-INFO' }
                         resolve()
                     }
                 }

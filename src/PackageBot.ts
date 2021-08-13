@@ -22,25 +22,35 @@ mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedT
     console.log(err)
 })
 
-/*
-;(async () => {
-    console.log('asdf')
-    const asdf: any = await trackPackage('51687791086', 'gls')
-    console.log(asdf)
-})()
-*/
-
-//client.commands = new Collection()
-//client.commands.set(showList.help.name, showList)
+process.on('unhandledRejection', (err) => {
+    console.log('\x1b[31m' + `Uncaught error:` + '\x1b[0m')
+    console.log(err)
+})
 
 client.once('ready', async () => {
     console.log('\x1b[32m' + '\x1b[1m' + 'PackageBot is ready!' + '\x1b[0m')
 })
 
 client.on('message', async (message: any) => {
+    if (message.content.toLowerCase().startsWith(`${prefix}track`)) {
+        try {
+            const command = message.content.split(/ +/)
+            const pcg = new Package({ packageNum: command[1], courier: command[2] })
+            await showPackage(pcg, message.channel)
+        } catch (err) {
+            await message.delete()
+
+            const errorFooter = err.split('{footer}')[1]
+            if (errorFooter != undefined) {
+                sendStatus('ERROR', message.channel, err.split('{footer}')[0], { timeout: 5000, footer: errorFooter })
+            } else {
+                sendStatus('ERROR', message.channel, err, { timeout: 5000 })
+            }
+        }
+    }
     if (message.content.toLowerCase().startsWith(`${prefix}add`)) {
         try {
-            const command = message.content.split(' ')
+            const command = message.content.split(/ +/)
             const pcg = new Package({ packageNum: command[1], courier: command[2].toLowerCase() })
 
             await addPackage(pcg, message.channel)
@@ -52,12 +62,12 @@ client.on('message', async (message: any) => {
                 {}
             )
         } catch (err) {
-            message.delete()
+            await message.delete()
             const errorFooter = err.split('{footer}')[1]
             if (errorFooter != undefined) {
                 sendStatus('ERROR', message.channel, err.split('{footer}')[0], { timeout: 5000, footer: errorFooter })
             } else {
-                sendStatus('ERROR', message.channel, err.toString(), { timeout: 5000 })
+                sendStatus('ERROR', message.channel, err, { timeout: 5000 })
             }
         }
     }
@@ -88,6 +98,7 @@ client.on('message', async (message: any) => {
         }
     }
     if (message.content.toLowerCase().startsWith(`${prefix}list`)) {
+        await message.delete()
         showList(message.channel)
     }
 })
@@ -102,3 +113,4 @@ var { Package } = require('./modules/packageClass')
 var addPackage = require('./modules/addPackage')
 //var sendMessage = require('./modules/sendMessage')
 var showList = require('./modules/showList')
+var showPackage = require('./modules/showPackage')
