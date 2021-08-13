@@ -1,5 +1,6 @@
 //import { Collection } from 'discord.js'
 
+import { MessageEmbed } from 'discord.js'
 import sendStatus from './modules/sendStatus'
 
 const Discord = require('discord.js')
@@ -39,8 +40,8 @@ client.once('ready', async () => {
 client.on('message', async (message: any) => {
     if (message.content.toLowerCase().startsWith(`${prefix}add`)) {
         try {
-            const command = message.content.toLowerCase().split(' ')
-            const pcg = new Package({ packageNum: command[1], courier: command[2] })
+            const command = message.content.split(' ')
+            const pcg = new Package({ packageNum: command[1], courier: command[2].toLowerCase() })
 
             await addPackage(pcg, message.channel)
 
@@ -48,9 +49,10 @@ client.on('message', async (message: any) => {
                 'SUCCESS',
                 message.channel,
                 `Succesfully added a package to your tracking list!\nType \`${prefix}list\` to view it!`,
-                { timeout: 10000 }
+                {}
             )
         } catch (err) {
+            message.delete()
             const errorFooter = err.split('{footer}')[1]
             if (errorFooter != undefined) {
                 sendStatus('ERROR', message.channel, err.split('{footer}')[0], { timeout: 5000, footer: errorFooter })
@@ -58,6 +60,24 @@ client.on('message', async (message: any) => {
                 sendStatus('ERROR', message.channel, err.toString(), { timeout: 5000 })
             }
         }
+    }
+    if (message.content.toLowerCase().startsWith(`${prefix}help`)) {
+        const helpEmbed: MessageEmbed = new Discord.MessageEmbed()
+        helpEmbed
+            .setTitle('PackageBot Commands:')
+            .setColor('GREEN')
+            .setDescription([
+                `\t- \`${prefix}help\` - shows this message!`,
+                `\t- \`${prefix}couriers\` - shows the list of supported couriers!`,
+                `\t- \`${prefix}stats\` - shows statistics about the bot!`,
+                `\t- \`${prefix}track <package number> <courier>\` - shows info about the package!`,
+                `\t- \`${prefix}add <package number> <courier>\` - add the package to your tracking liszt!`,
+                `\t- \`${prefix}list\` - shows your tracking liszt!`,
+                `\t- \`${prefix}init\` - turns the bot on!`,
+                `\t- \`${prefix}debug <super secret parms> <other secret parms>\` - super secret stuff, only for authorised people!`,
+            ])
+
+        message.channel.send(helpEmbed)
     }
     if (message.content.toLowerCase().startsWith(`${debugPrefix} add`)) {
         const addAmount: number = parseInt(message.content.split(' ')[2])
