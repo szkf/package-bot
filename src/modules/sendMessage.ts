@@ -16,6 +16,9 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
                 await message.react(reactions[i])
             }
 
+            var reactionAddListner: any
+            var reactionRemoveListner: any
+
             var sentTimeoutMessage = false
             const inactiveColors: string[] = ['RED', 'ORANGE', 'GOLD', 'YELLOW']
             var timeoutInterval: any
@@ -34,6 +37,8 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
                     sentTimeoutMessage = true
 
                     if (counter == 0) {
+                        client.removeListener('messageReactionRemove', reactionRemoveListner)
+                        client.removeListener('messageReactionAdd', reactionAddListner)
                         message.delete()
                         clearInterval(timeoutInterval)
                         resolve()
@@ -65,6 +70,8 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
                             inactiveEmbed.setColor('ORANGE')
                         }
                         if (counter == 0) {
+                            client.removeListener('messageReactionRemove', reactionRemoveListner)
+                            client.removeListener('messageReactionAdd', reactionAddListner)
                             message.delete()
                             clearInterval(timeoutInterval)
                             resolve()
@@ -77,7 +84,7 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
             const letters: string[] = ['🇦', '🇧', '🇨', '🇩', '🇪']
             var selectedList: string[] = []
 
-            const reactionAddListner = async (reaction: MessageReaction, user: any) => {
+            reactionAddListner = async (reaction: MessageReaction, user: any) => {
                 if (reaction.message.id == message.id && reactions.includes(reaction.emoji.name)) {
                     if (letters.includes(reaction.emoji.name)) {
                         resetTimeout()
@@ -94,9 +101,10 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
                         } else {
                             client.removeListener('messageReactionRemove', reactionRemoveListner)
                             client.removeListener('messageReactionAdd', reactionAddListner)
-                            message.delete()
                             clearInterval(timeoutInterval)
                             clearTimeout(messageTimeout)
+                            message.delete()
+
                             returnVal = { action: 'DELETE', selectedList: selectedList }
                             resolve()
                         }
@@ -108,9 +116,10 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
 
                         client.removeListener('messageReactionRemove', reactionRemoveListner)
                         client.removeListener('messageReactionAdd', reactionAddListner)
-                        message.delete()
                         clearInterval(timeoutInterval)
                         clearTimeout(messageTimeout)
+                        message.delete()
+
                         returnVal = { action: 'NEXT-PAGE' }
                         resolve()
                     }
@@ -130,7 +139,7 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
                 }
             }
 
-            const reactionRemoveListner = async (reaction: MessageReaction) => {
+            reactionRemoveListner = async (reaction: MessageReaction) => {
                 if (reaction.message.id == message.id) {
                     if (letters.includes(reaction.emoji.name) && reactions.includes(reaction.emoji.name)) {
                         resetTimeout()
