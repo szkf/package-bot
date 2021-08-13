@@ -3,8 +3,8 @@ export {}
 import { Message, MessageEmbed, MessageReaction, TextChannel } from 'discord.js'
 
 const Discord = require('discord.js')
-const client = require('../PackageBot')
 
+import client from '../PackageBot'
 import sendStatus from './sendStatus'
 
 const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: TextChannel, pcgNumList: string[] = []) => {
@@ -78,8 +78,8 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
             var selectedList: string[] = []
 
             const reactionAddListner = async (reaction: MessageReaction, user: any) => {
-                if (reaction.message.id == message.id) {
-                    if (letters.includes(reaction.emoji.name) && reactions.includes(reaction.emoji.name)) {
+                if (reaction.message.id == message.id && reactions.includes(reaction.emoji.name)) {
+                    if (letters.includes(reaction.emoji.name)) {
                         resetTimeout()
 
                         var index: number = letters.indexOf(reaction.emoji.name)
@@ -100,6 +100,32 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
                             returnVal = { action: 'DELETE', selectedList: selectedList }
                             resolve()
                         }
+                    }
+                    if (reaction.emoji.name == '➡️') {
+                        resetTimeout()
+
+                        message.reactions.cache.get('🗑️')!.users.remove(user.id)
+
+                        client.removeListener('messageReactionRemove', reactionRemoveListner)
+                        client.removeListener('messageReactionAdd', reactionAddListner)
+                        message.delete()
+                        clearInterval(timeoutInterval)
+                        clearTimeout(messageTimeout)
+                        returnVal = { action: 'NEXT-PAGE' }
+                        resolve()
+                    }
+                    if (reaction.emoji.name == '⬅️') {
+                        resetTimeout()
+
+                        message.reactions.cache.get('🗑️')!.users.remove(user.id)
+
+                        client.removeListener('messageReactionRemove', reactionRemoveListner)
+                        client.removeListener('messageReactionAdd', reactionAddListner)
+                        message.delete()
+                        clearInterval(timeoutInterval)
+                        clearTimeout(messageTimeout)
+                        returnVal = { action: 'PREVIOUS-PAGE' }
+                        resolve()
                     }
                 }
             }
