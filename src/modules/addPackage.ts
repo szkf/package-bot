@@ -4,19 +4,21 @@ import { PackageInterface } from './packageClass'
 const { PackageModel } = require('./packageClass')
 const getPackage = require('./getPackage')
 
-const addPackage = async (data: PackageInterface) => {
+const addPackage = async (data: PackageInterface, debug: boolean = false) => {
     const pcgExists = await getPackage(data.packageNum)
 
-    if (pcgExists != null) {
-        throw new Error(`The package you trying to add to the list is already in it!
+    if (debug == false) {
+        if (pcgExists != null) {
+            throw new Error(`The package you trying to add to the list is already in it!
 Its the newest technique of double tracking! It tells ya that the status changed two times to remind ya!`).message
-    }
+        }
 
-    try {
-        await data.getCurrentStatus()
-    } catch (err) {
-        console.log(err)
-        return new Error(err).message
+        try {
+            await data.getCurrentStatus()
+        } catch (err) {
+            console.log(err)
+            return new Error(err).message
+        }
     }
 
     const pcg = new PackageModel({

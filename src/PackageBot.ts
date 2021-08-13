@@ -1,7 +1,7 @@
 //import { Collection } from 'discord.js'
 
 const Discord = require('discord.js')
-const { prefix } = require('../config.json')
+const { debugPrefix, prefix } = require('../config.json')
 const mongoose = require('mongoose')
 require('dotenv').config({ path: '../.env' })
 const token = process.env.BOT_TOKEN
@@ -35,7 +35,7 @@ client.once('ready', async () => {
 })
 
 client.on('message', async (message: any) => {
-    if (message.content.toLowerCase().startsWith(`${prefix} add`)) {
+    if (message.content.toLowerCase().startsWith(`${prefix}add`)) {
         try {
             const pcg = new Package({ packageNum: '0000293235010U', courier: 'dpd', note: 'Cool note!' })
 
@@ -44,14 +44,22 @@ client.on('message', async (message: any) => {
             message.channel.send(err)
         }
     }
-    if (message.content == 'pt!test') {
+    if (message.content.toLowerCase().startsWith(`${debugPrefix} add`)) {
+        const addAmount: number = parseInt(message.content.split(' ')[2])
+
+        for (var i: number = 1; i <= addAmount; i++) {
+            var pcg = new Package({ packageNum: i, courier: 'dpd', note: i.toString() })
+            await addPackage(pcg, true)
+        }
+    }
+    if (message.content.toLowerCase().startsWith(`${prefix}list`)) {
         showList(message.channel)
     }
 })
 
 client.login(token)
 
-module.exports = client
+export default client
 
 // load after client export
 
