@@ -84,7 +84,7 @@ client.on('message', async (message: any) => {
                 courier: command[2],
             })
 
-            await addPackage(pcg, message.channel, true)
+            await addPackage(pcg, message.channel)
 
             sendStatus(
                 'SUCCESS',

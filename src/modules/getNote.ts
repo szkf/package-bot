@@ -5,7 +5,7 @@ import sendStatus from './sendStatus'
 const Discord = require('discord.js')
 const { prefix } = require('../../config.json')
 
-const getNote = (channel: TextChannel) => {
+const getNote = (channel: TextChannel): Promise<string> => {
     return new Promise((resolve) => {
         const noteEmbed: MessageEmbed = new Discord.MessageEmbed()
         noteEmbed.setColor('BLUE').setTitle('Add a Note!').setDescription(`Type \`${prefix}note <note>\` to add a note!`)
@@ -25,15 +25,20 @@ const getNote = (channel: TextChannel) => {
                     inactiveEmbed.setColor(inactiveColors[counter])
 
                     inactiveEmbed.setTitle(`This message will auto-delete in ${counter} seconds because of inactivity!`)
-                    message.edit(inactiveEmbed)
+                    if (message.editable == true) {
+                        message.edit(inactiveEmbed)
+                    }
 
                     sentTimeoutMessage = true
 
                     if (counter == 0) {
                         client.removeListener('message', messageListner)
-                        message.delete()
+                        if (message.deletable == true) {
+                            message.delete()
+                        }
+                        clearTimeout(messageTimeout)
                         clearInterval(timeoutInterval)
-                        resolve(undefined)
+                        resolve('')
                     }
                     counter--
                 }, 1000)
@@ -44,7 +49,9 @@ const getNote = (channel: TextChannel) => {
                 clearInterval(timeoutInterval)
 
                 if (sentTimeoutMessage) {
-                    message.edit(noteEmbed)
+                    if (message.editable == true) {
+                        message.edit(noteEmbed)
+                    }
                     sentTimeoutMessage = false
                 }
 
@@ -54,15 +61,21 @@ const getNote = (channel: TextChannel) => {
                         inactiveEmbed.setColor(inactiveColors[counter])
 
                         inactiveEmbed.setTitle(`This message will auto-delete in ${counter} seconds because of inactivity!`)
-                        message.edit(inactiveEmbed)
+                        if (message.editable == true) {
+                            message.edit(inactiveEmbed)
+                        }
 
                         sentTimeoutMessage = true
 
                         if (counter == 0) {
                             client.removeListener('message', messageListner)
-                            message.delete()
+                            clearTimeout(messageTimeout)
                             clearInterval(timeoutInterval)
-                            resolve(undefined)
+                            if (message.deletable == true) {
+                                message.delete()
+                            }
+
+                            resolve('')
                         }
                         counter--
                     }, 1000)
@@ -75,7 +88,12 @@ const getNote = (channel: TextChannel) => {
 
                     if (msg.content.split(`${prefix}note `)[1] != '' && msg.content.split(`${prefix}note `)[1].length <= 40) {
                         client.removeListener('message', messageListner)
-                        message.delete()
+                        clearTimeout(messageTimeout)
+                        clearInterval(timeoutInterval)
+                        if (message.deletable == true) {
+                            message.delete()
+                        }
+
                         resolve(msg.content.split(`${prefix}note `)[1])
                     } else {
                         sendStatus(

@@ -1,5 +1,6 @@
 import { EmbedField, MessageEmbed, TextChannel } from 'discord.js'
 import deletePackage from './deletePackage'
+import getNote from './getNote'
 import sendMessage from './sendMessage'
 import sendStatus from './sendStatus'
 
@@ -8,6 +9,7 @@ export {}
 const Discord = require('discord.js')
 const paginateList = require('./paginateList')
 const getPackage = require('./getPackage')
+const updatePackage = require('./updatePackage')
 const { prefix } = require('../../config.json')
 
 const showList = async (channel: TextChannel, page: number = 0) => {
@@ -79,6 +81,7 @@ list or add it via the tracking GUI by typing \`p!track <package number> <courie
 
     reactionList.splice(packageList[page].length)
     reactionList.push('🗑️')
+    reactionList.push('📝')
 
     if (page > 0) {
         reactionList.unshift('⬅️')
@@ -125,6 +128,15 @@ Type \`${prefix}add <package number> <courier>\` to add a package to your tracki
                     showList(channel)
                     return
             }
+
+            return
+        case 'EDIT':
+            const newNote: string = await getNote(channel)
+            if (newNote == '') return
+
+            await updatePackage(returnValue.selectedList[0], [], newNote)
+
+            showList(channel, page)
 
             return
         case 'NEXT':

@@ -1,10 +1,11 @@
 export {}
 
-import { Message, MessageEmbed, MessageReaction, TextChannel } from 'discord.js'
+import { Message, MessageEmbed, MessageReaction, TextChannel, User } from 'discord.js'
 
 const Discord = require('discord.js')
 
 import client from '../PackageBot'
+import sendStatus from './sendStatus'
 
 const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: TextChannel, { pcgNumList = [], deleteOnTimeout = true }) => {
     var returnVal: any = { timedOut: true }
@@ -94,7 +95,7 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
             const letters: string[] = ['🇦', '🇧', '🇨', '🇩', '🇪']
             var selectedList: string[] = []
 
-            reactionAddListner = async (reaction: MessageReaction) => {
+            reactionAddListner = async (reaction: MessageReaction, user: User) => {
                 if (reaction.message.id == message.id && reactions.includes(reaction.emoji.name)) {
                     if (letters.includes(reaction.emoji.name)) {
                         resetTimeout()
@@ -194,6 +195,29 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
                         clearTimeout(messageTimeout)
                         returnVal = { action: 'CANCEL' }
                         resolve()
+                    }
+                    if (reaction.emoji.name == '📝') {
+                        await message.reactions.cache.get('📝')!.users.remove(user.id)
+                        if (selectedList.length == 0) {
+                            sendStatus('ERROR', channel, "You didn't select any package!", {
+                                footer: 'Select a package first!',
+                                timeout: 5000,
+                            })
+                        } else if (selectedList.length > 1) {
+                            sendStatus('ERROR', channel, 'You can only edit one note at a time!', { timeout: 5000 })
+                        } else {
+                            resetTimeout()
+
+                            client.removeListener('messageReactionRemove', reactionRemoveListner)
+                            client.removeListener('messageReactionAdd', reactionAddListner)
+                            if (message.deletable == true) {
+                                await message.delete()
+                            }
+                            clearInterval(timeoutInterval)
+                            clearTimeout(messageTimeout)
+                            returnVal = { action: 'EDIT', selectedList: selectedList }
+                            resolve()
+                        }
                     }
                 }
             }

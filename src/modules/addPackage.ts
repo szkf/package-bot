@@ -13,13 +13,21 @@ const addPackage = async (data: PackageInterface, channel: TextChannel, debug: b
     if (debug == false) {
         if (pcgExists != null) {
             if (pcgExists.deleted == true) {
-                await updatePackage(data.packageNum, pcgExists.status, false)
+                const note = await getNote(channel)
+
+                if (note == '') {
+                    throw new Error('No note added!\nFalied to add package to list.').message
+                }
+
+                await updatePackage(data.packageNum, [], note)
                 return
             } else {
                 throw new Error(`The package you trying to add to the list is already in it!
 {footer}Its the newest technique of double tracking! It tells ya that the status changed two times to remind ya!`).message
             }
         }
+
+        console.log('asdf')
 
         try {
             await data.getCurrentStatus()
@@ -29,7 +37,7 @@ const addPackage = async (data: PackageInterface, channel: TextChannel, debug: b
 
         const note = await getNote(channel)
 
-        if (note == undefined) {
+        if (note == '') {
             throw new Error('No note added!\nFalied to add package to list.').message
         }
 
