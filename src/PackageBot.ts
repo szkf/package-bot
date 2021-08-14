@@ -143,7 +143,7 @@ client.on('message', async (message: any) => {
         const addAmount: number = parseInt(message.content.split(' ')[2])
 
         for (var i: number = 1; i <= addAmount; i++) {
-            var pcg = new Package({ packageNum: i, courier: 'dpd', note: i.toString() })
+            var pcg = new Package({ packageNum: i, courier: 'dpd', note: i.toString(), status: ['test', 'test', 'test', 'test'] })
             await addPackage(pcg, message.channel, true)
         }
     }

@@ -1,10 +1,10 @@
 import { EmbedField, MessageEmbed, TextChannel } from 'discord.js'
 import deletePackage from './deletePackage'
 import getNote from './getNote'
+import { PackageInterface } from './packageClass'
 import sendMessage from './sendMessage'
 import sendStatus from './sendStatus'
-
-export {}
+import showMoreInfo from './showMoreinfo'
 
 const Discord = require('discord.js')
 const paginateList = require('./paginateList')
@@ -15,6 +15,10 @@ const { prefix } = require('../../config.json')
 const showList = async (channel: TextChannel, page: number = 0) => {
     var packageList = await getPackage()
     packageList = paginateList(packageList)
+
+    if (page >= packageList.length - 1) {
+        page = packageList.length - 1
+    }
 
     if (packageList.length == 0) {
         sendStatus(
@@ -80,6 +84,7 @@ list or add it via the tracking GUI by typing \`p!track <package number> <courie
     var reactionList: string[] = ['🇦', '🇧', '🇨', '🇩', '🇪']
 
     reactionList.splice(packageList[page].length)
+    reactionList.push('ℹ️')
     reactionList.push('🗑️')
     reactionList.push('📝')
 
@@ -89,7 +94,7 @@ list or add it via the tracking GUI by typing \`p!track <package number> <courie
         reactionList.push('➡️')
     }
 
-    const returnValue = await sendMessage(listEmbed, reactionList, channel, { pcgNumList: pcgNumList })
+    const returnValue = await sendMessage(listEmbed, reactionList, channel, { pcgNumList: pcgNumList, infoReturnList: true })
 
     if (returnValue.timedOut) return
 
@@ -138,6 +143,16 @@ Type \`${prefix}add <package number> <courier>\` to add a package to your tracki
 
             showList(channel, page)
 
+            return
+        case 'MORE-INFO':
+            var moreInfoList: PackageInterface[] = []
+
+            for (var i: number = 0; i < returnValue.selectedList.length; i++) {
+                moreInfoList.push(packageList[page][pcgNumList.indexOf(returnValue.selectedList[i])])
+            }
+
+            await showMoreInfo(channel, moreInfoList, page)
+            showList(channel, page)
             return
         case 'NEXT':
             showList(channel, page + 1)

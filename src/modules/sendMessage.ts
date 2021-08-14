@@ -7,7 +7,12 @@ const Discord = require('discord.js')
 import client from '../PackageBot'
 import sendStatus from './sendStatus'
 
-const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: TextChannel, { pcgNumList = [], deleteOnTimeout = true }) => {
+const sendMessage = async (
+    embed: MessageEmbed,
+    reactions: string[],
+    channel: TextChannel,
+    { pcgNumList = [], deleteOnTimeout = true, infoReturnList = false, editRequireSelected = true }
+) => {
     var returnVal: any = { timedOut: true }
 
     await channel.send(embed).then(async (message: Message) => {
@@ -171,17 +176,39 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
                         resolve()
                     }
                     if (reaction.emoji.name == 'ℹ️') {
-                        resetTimeout()
+                        if (infoReturnList == true) {
+                            await message.reactions.cache.get('ℹ️')!.users.remove(user.id)
+                            if (selectedList.length == 0) {
+                                sendStatus('ERROR', channel, "You didn't select any package!", {
+                                    footer: 'Select a package first!',
+                                    timeout: 5000,
+                                })
+                            } else {
+                                resetTimeout()
 
-                        client.removeListener('messageReactionRemove', reactionRemoveListner)
-                        client.removeListener('messageReactionAdd', reactionAddListner)
-                        if (message.deletable == true) {
-                            await message.delete()
+                                client.removeListener('messageReactionRemove', reactionRemoveListner)
+                                client.removeListener('messageReactionAdd', reactionAddListner)
+                                if (message.deletable == true) {
+                                    await message.delete()
+                                }
+                                clearInterval(timeoutInterval)
+                                clearTimeout(messageTimeout)
+                                returnVal = { action: 'MORE-INFO', selectedList: selectedList }
+                                resolve()
+                            }
+                        } else {
+                            resetTimeout()
+
+                            client.removeListener('messageReactionRemove', reactionRemoveListner)
+                            client.removeListener('messageReactionAdd', reactionAddListner)
+                            if (message.deletable == true) {
+                                await message.delete()
+                            }
+                            clearInterval(timeoutInterval)
+                            clearTimeout(messageTimeout)
+                            returnVal = { action: 'MORE-INFO' }
+                            resolve()
                         }
-                        clearInterval(timeoutInterval)
-                        clearTimeout(messageTimeout)
-                        returnVal = { action: 'MORE-INFO' }
-                        resolve()
                     }
                     if (reaction.emoji.name == '❌') {
                         resetTimeout()
@@ -197,14 +224,28 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
                         resolve()
                     }
                     if (reaction.emoji.name == '📝') {
-                        await message.reactions.cache.get('📝')!.users.remove(user.id)
-                        if (selectedList.length == 0) {
-                            sendStatus('ERROR', channel, "You didn't select any package!", {
-                                footer: 'Select a package first!',
-                                timeout: 5000,
-                            })
-                        } else if (selectedList.length > 1) {
-                            sendStatus('ERROR', channel, 'You can only edit one note at a time!', { timeout: 5000 })
+                        if (editRequireSelected) {
+                            await message.reactions.cache.get('📝')!.users.remove(user.id)
+                            if (selectedList.length == 0) {
+                                sendStatus('ERROR', channel, "You didn't select any package!", {
+                                    footer: 'Select a package first!',
+                                    timeout: 5000,
+                                })
+                            } else if (selectedList.length > 1) {
+                                sendStatus('ERROR', channel, 'You can only edit one note at a time!', { timeout: 5000 })
+                            } else {
+                                resetTimeout()
+
+                                client.removeListener('messageReactionRemove', reactionRemoveListner)
+                                client.removeListener('messageReactionAdd', reactionAddListner)
+                                if (message.deletable == true) {
+                                    await message.delete()
+                                }
+                                clearInterval(timeoutInterval)
+                                clearTimeout(messageTimeout)
+                                returnVal = { action: 'EDIT', selectedList: selectedList }
+                                resolve()
+                            }
                         } else {
                             resetTimeout()
 
@@ -215,9 +256,35 @@ const sendMessage = async (embed: MessageEmbed, reactions: string[], channel: Te
                             }
                             clearInterval(timeoutInterval)
                             clearTimeout(messageTimeout)
-                            returnVal = { action: 'EDIT', selectedList: selectedList }
+                            returnVal = { action: 'EDIT' }
                             resolve()
                         }
+                    }
+                    if (reaction.emoji.name == '◀️') {
+                        resetTimeout()
+
+                        client.removeListener('messageReactionRemove', reactionRemoveListner)
+                        client.removeListener('messageReactionAdd', reactionAddListner)
+                        if (message.deletable == true) {
+                            await message.delete()
+                        }
+                        clearInterval(timeoutInterval)
+                        clearTimeout(messageTimeout)
+                        returnVal = { action: 'BACK' }
+                        resolve()
+                    }
+                    if (reaction.emoji.name == '▶️') {
+                        resetTimeout()
+
+                        client.removeListener('messageReactionRemove', reactionRemoveListner)
+                        client.removeListener('messageReactionAdd', reactionAddListner)
+                        if (message.deletable == true) {
+                            await message.delete()
+                        }
+                        clearInterval(timeoutInterval)
+                        clearTimeout(messageTimeout)
+                        returnVal = { action: 'FORWARD' }
+                        resolve()
                     }
                 }
             }
