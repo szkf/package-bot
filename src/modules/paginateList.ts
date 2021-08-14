@@ -3,6 +3,13 @@ import { PackageInterface } from './packageClass'
 const paginateList = (list: PackageInterface[]) => {
     var paginatedList = [] // [[Package, Package, Package, Package, Package], ...]
 
+    for (var i: number = 0; i < list.length; i++) {
+        if (list[i].deleted == true) {
+            list.splice(i, 1)
+            i--
+        }
+    }
+
     for (var i: number = 0; i < Math.ceil(list.length / 5); i++) {
         paginatedList.push(list.slice(i * 5, i * 5 + 5))
     }

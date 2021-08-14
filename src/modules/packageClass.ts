@@ -6,6 +6,7 @@ export interface PackageInterface {
     courier: string
     status: string[]
     note: string
+    deleted: boolean
     getCurrentStatus(): Promise<any>
 }
 
@@ -14,6 +15,7 @@ interface packageData {
     courier: string
     status: string[]
     note: string
+    deleted: boolean
 }
 
 class Package implements PackageInterface {
@@ -21,13 +23,14 @@ class Package implements PackageInterface {
     courier: string
     status: string[]
     note: string
+    deleted: boolean
 
     constructor(data: packageData) {
         if (data.packageNum == undefined) {
             throw new Error('You did not specify the package number!\nProper usage `(p!add / p!track) <package number> <courier>`').message
         }
 
-        if (data.courier != 'dpd' && data.courier != 'gls') {
+        if (data.courier.toLowerCase() != 'dpd' && data.courier.toLowerCase() != 'gls') {
             if (data.courier == undefined) {
                 throw new Error(`You did not specify the courier!\nProper usage \`(p!add / p!track) <package number> <courier>\``).message
             }
@@ -35,8 +38,14 @@ class Package implements PackageInterface {
 Type \`p!couriers\` to see which couriers we support!`).message
         }
         this.packageNum = data.packageNum
-        this.courier = data.courier
+        this.courier = data.courier.toLowerCase()
         this.note = data.note
+
+        this.deleted = data.deleted
+
+        if (data.deleted == undefined) {
+            this.deleted = false
+        }
         if (data.status != undefined) {
             this.status = data.status
         }
@@ -58,6 +67,7 @@ const PackageSchema = new mongoose.Schema({
     courier: String,
     status: Array,
     note: String,
+    deleted: Boolean,
 })
 
 module.exports.PackageModel = mongoose.model('PackageModel', PackageSchema)

@@ -31,7 +31,30 @@ client.once('ready', async () => {
     console.log('\x1b[32m' + '\x1b[1m' + 'PackageBot is ready!' + '\x1b[0m')
 })
 
+var init = false
+
 client.on('message', async (message: any) => {
+    /*
+        INIT
+    */
+
+    if (message.content.toLowerCase().startsWith(`${prefix}init`)) {
+        if (init) {
+            message.delete()
+            sendStatus('ERROR', message.channel, 'The bot is already on!', { footer: 'No need to turn it on twice!', timeout: 10000 })
+        } else {
+            init = true
+            checkStatus(message)
+            sendStatus('SUCCESS', message.channel, 'PackageBot is ready!', {
+                footer: 'Now the bot is going to alert you of any package status change!',
+            })
+        }
+    }
+
+    /*
+        TRACK PACKAGE
+    */
+
     if (message.content.toLowerCase().startsWith(`${prefix}track`)) {
         try {
             const command = message.content.split(/ +/)
@@ -48,12 +71,20 @@ client.on('message', async (message: any) => {
             }
         }
     }
+
+    /*
+        ADD PACKAGE
+    */
+
     if (message.content.toLowerCase().startsWith(`${prefix}add`)) {
         try {
             const command = message.content.split(/ +/)
-            const pcg = new Package({ packageNum: command[1], courier: command[2].toLowerCase() })
+            const pcg = new Package({
+                packageNum: command[1],
+                courier: command[2],
+            })
 
-            await addPackage(pcg, message.channel)
+            await addPackage(pcg, message.channel, true)
 
             sendStatus(
                 'SUCCESS',
@@ -62,15 +93,20 @@ client.on('message', async (message: any) => {
                 {}
             )
         } catch (err) {
-            await message.delete()
             const errorFooter = err.split('{footer}')[1]
             if (errorFooter != undefined) {
                 sendStatus('ERROR', message.channel, err.split('{footer}')[0], { timeout: 5000, footer: errorFooter })
             } else {
                 sendStatus('ERROR', message.channel, err, { timeout: 5000 })
             }
+            await message.delete()
         }
     }
+
+    /*
+        HELP COMMAND
+    */
+
     if (message.content.toLowerCase().startsWith(`${prefix}help`)) {
         const helpEmbed: MessageEmbed = new Discord.MessageEmbed()
         helpEmbed
@@ -89,6 +125,20 @@ client.on('message', async (message: any) => {
 
         message.channel.send(helpEmbed)
     }
+
+    /*
+        SHOW LIST
+    */
+
+    if (message.content.toLowerCase().startsWith(`${prefix}list`)) {
+        showList(message.channel)
+        await message.delete()
+    }
+
+    /*
+        DEBUG
+    */
+
     if (message.content.toLowerCase().startsWith(`${debugPrefix} add`)) {
         const addAmount: number = parseInt(message.content.split(' ')[2])
 
@@ -96,10 +146,6 @@ client.on('message', async (message: any) => {
             var pcg = new Package({ packageNum: i, courier: 'dpd', note: i.toString() })
             await addPackage(pcg, message.channel, true)
         }
-    }
-    if (message.content.toLowerCase().startsWith(`${prefix}list`)) {
-        await message.delete()
-        showList(message.channel)
     }
 })
 
@@ -114,3 +160,4 @@ var addPackage = require('./modules/addPackage')
 //var sendMessage = require('./modules/sendMessage')
 var showList = require('./modules/showList')
 var showPackage = require('./modules/showPackage')
+var checkStatus = require('./modules/checkStatus')
