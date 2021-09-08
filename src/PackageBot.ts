@@ -31,6 +31,12 @@ client.once('ready', async () => {
     console.log('\x1b[32m' + '\x1b[1m' + 'PackageBot is ready!' + '\x1b[0m')
 })
 
+const versions = [
+    { version: 'Version 2.1.0 (Current)', changelog: [` - Added UPS support!`] },
+    { version: 'Version 2.0.0', changelog: [' - Rewritten in TypeScript', ' - Uses MongoDB'] },
+    { version: 'Version 1.0.0', changelog: ['***First release***', ` - Type ${prefix}help to view all commands!`] },
+]
+
 var init = false
 
 client.on('message', async (message: any) => {
@@ -70,6 +76,28 @@ client.on('message', async (message: any) => {
                 sendStatus('ERROR', message.channel, err, { timeout: 5000 })
             }
         }
+    }
+
+    /*
+        VERSION
+    */
+
+    if (message.content.toLowerCase().startsWith(`${prefix}version`) || message.content.toLowerCase().startsWith(`${prefix}v`)) {
+        showVersion(message.channel, versions, 0)
+    }
+
+    /*
+        COURIERS LIST
+    */
+
+    if (message.content.toLowerCase().startsWith(`${prefix}couriers`)) {
+        const couriersEmbed: MessageEmbed = new Discord.MessageEmbed()
+        couriersEmbed
+            .setTitle('Supported Couriers:')
+            .setDescription(['*DPD*', '*GLS*', '*UPS*'])
+            .setColor('GREEN')
+            .setFooter('Support for more couriers coming soon!')
+        message.channel.send(couriersEmbed)
     }
 
     /*
@@ -120,6 +148,7 @@ client.on('message', async (message: any) => {
                 `\t- \`${prefix}add <package number> <courier>\` - add the package to your tracking liszt!`,
                 `\t- \`${prefix}list\` - shows your tracking liszt!`,
                 `\t- \`${prefix}init\` - turns the bot on!`,
+                `\t- \`${prefix}version\`, \`${prefix}v\` - shows release notes for PackageBot!`,
                 `\t- \`${prefix}debug <super secret parms> <other secret parms>\` - super secret stuff, only for authorised people!`,
             ])
 
@@ -161,3 +190,4 @@ var addPackage = require('./modules/addPackage')
 var showList = require('./modules/showList')
 var showPackage = require('./modules/showPackage')
 var checkStatus = require('./modules/checkStatus')
+var showVersion = require('./modules/showVersion')
