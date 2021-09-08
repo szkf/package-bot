@@ -57,7 +57,7 @@ const sendMessage = async (
                         counter--
                     }, 1000)
                 }
-            }, 10000)
+            }, 300000)
 
             const resetTimeout = () => {
                 clearTimeout(messageTimeout)
@@ -94,7 +94,7 @@ const sendMessage = async (
                             counter--
                         }, 1000)
                     }
-                }, 10000)
+                }, 300000)
             }
 
             const letters: string[] = ['🇦', '🇧', '🇨', '🇩', '🇪']
