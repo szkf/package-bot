@@ -17,7 +17,7 @@
         "discord.js": "^12.5.3",
         "dotenv": "^10.0.0",
         "fs": "^0.0.1-security",
-        "mongoose": "^5.13.6",
+        "mongoose": "^5.13.9",
         "puppeteer": "^10.2.0"
     },
     "devDependencies": {
