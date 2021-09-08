@@ -30,7 +30,7 @@ class Package implements PackageInterface {
             throw new Error('You did not specify the package number!\nProper usage `(p!add / p!track) <package number> <courier>`').message
         }
 
-        if (data.courier.toLowerCase() != 'dpd' && data.courier.toLowerCase() != 'gls') {
+        if (data.courier.toLowerCase() != 'dpd' && data.courier.toLowerCase() != 'gls' && data.courier.toLowerCase() != 'ups') {
             if (data.courier == undefined) {
                 throw new Error(`You did not specify the courier!\nProper usage \`(p!add / p!track) <package number> <courier>\``).message
             }
