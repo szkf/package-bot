@@ -106,7 +106,7 @@ const checkStatus = async (message: Message) => {
                 }
             }
         }
-    }, 10000)
+    }, 30000)
 }
 
 module.exports = checkStatus
