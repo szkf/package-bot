@@ -21,7 +21,7 @@ Notes are an easy way to differentiate between parcels.<br />They are displayed 
 <img src="https://github.com/szkf/package-bot/blob/master/assets/Notification.png" width="500px" />
 
 ### Supported couriers
-The current latest (v2.1.1) supports DPD, GLS and UPS.<br />Support for more couriers coming soon!
+The latest version (v2.1.1) supports DPD, GLS and UPS.<br />Support for more couriers coming soon!
 
 ## Usage
 ### Adding new packages to list
