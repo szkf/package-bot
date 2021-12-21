@@ -69,15 +69,17 @@ list or add it via the tracking GUI by typing \`p!track <package number> <courie
     listEmbed
         .setTitle('Your Package Tracking List:')
         .setColor('GREEN')
-        .setDescription([
-            '***React with:***',
-            '⬅️ to go back a page!',
-            '➡️ to go to the next page!',
-            'ℹ️ to get info about the selected packages!',
-            '🗑️ to delete selected packages\n(if nothing is selected deletes all packages)!',
-            '📝 to edit the selected package note!',
-            '🇦-🇪 to select specific packages!',
-        ])
+        .setDescription(
+            [
+                '***React with:***',
+                '⬅️ to go back a page!',
+                '➡️ to go to the next page!',
+                'ℹ️ to get info about the selected packages!',
+                '🗑️ to delete selected packages\n(if nothing is selected deletes all packages)!',
+                '📝 to edit the selected package note!',
+                '🇦-🇪 to select specific packages!',
+            ].join('\n')
+        )
         .addFields(listFields)
         .setFooter(`Page ${page + 1}/${packageList.length}`)
 

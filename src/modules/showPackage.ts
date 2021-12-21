@@ -22,10 +22,10 @@ const showPackage = async (pcg: PackageInterface, channel: TextChannel, status: 
     var locationField: string[] = []
 
     if (moreInfo) {
-        packageEmbed.addField('React with:', [
-            '✅ to add the package to your tracking list!',
-            '⬅️️ to go back to general information about the package!',
-        ])
+        packageEmbed.addField(
+            'React with:',
+            ['✅ to add the package to your tracking list!', '⬅️️ to go back to general information about the package!'].join('\n')
+        )
 
         for (var i: number = 0; i < status.length; i += 4) {
             dateField.push(i / 4 + 1 + '. ' + status[i] + ' ' + status[i + 1])
@@ -36,7 +36,7 @@ const showPackage = async (pcg: PackageInterface, channel: TextChannel, status: 
         reactions = ['⬅️', '✅']
     } else {
         packageEmbed
-            .addField('React with:', ['✅ to add the package to your tracking list!', 'ℹ️ to see the full delivery history!'])
+            .addField('React with:', ['✅ to add the package to your tracking list!', 'ℹ️ to see the full delivery history!'].join('\n'))
             .setFooter(
                 'To remove the item from your tracking liszt, select the package you want to delete and react with the trash can emoji!'
             )
@@ -51,17 +51,17 @@ const showPackage = async (pcg: PackageInterface, channel: TextChannel, status: 
     packageEmbed.addFields(
         {
             name: 'Date:',
-            value: dateField,
+            value: dateField.join('\n'),
             inline: true,
         },
         {
             name: 'Status:',
-            value: statusField,
+            value: statusField.join('\n'),
             inline: true,
         },
         {
             name: 'Location:',
-            value: locationField,
+            value: locationField.join('\n'),
             inline: true,
         }
     )

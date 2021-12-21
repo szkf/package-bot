@@ -1,6 +1,6 @@
 export {}
 
-import { Message, MessageEmbed, MessageReaction, TextChannel, User } from 'discord.js'
+import { ColorResolvable, Message, MessageEmbed, MessageReaction, TextChannel, User } from 'discord.js'
 
 const Discord = require('discord.js')
 
@@ -15,7 +15,7 @@ const sendMessage = async (
 ) => {
     var returnVal: any = { timedOut: true }
 
-    await channel.send(embed).then(async (message: Message) => {
+    await channel.send({ embeds: [embed] }).then(async (message: Message) => {
         return new Promise<void>(async (resolve) => {
             for (var i: number = 0; i < reactions.length; i++) {
                 await message.react(reactions[i])
@@ -25,7 +25,7 @@ const sendMessage = async (
             var reactionRemoveListner: any
 
             var sentTimeoutMessage = false
-            const inactiveColors: string[] = ['RED', 'ORANGE', 'GOLD', 'YELLOW']
+            const inactiveColors: ColorResolvable[] = ['RED', 'ORANGE', 'GOLD', 'YELLOW']
             var timeoutInterval: any
 
             const inactiveEmbed: MessageEmbed = new Discord.MessageEmbed()
@@ -40,7 +40,7 @@ const sendMessage = async (
                         inactiveEmbed.setColor(inactiveColors[counter])
 
                         inactiveEmbed.setTitle(`This message will auto-delete in ${counter} seconds because of inactivity!`)
-                        message.edit(inactiveEmbed)
+                        message.edit({ embeds: [inactiveEmbed] })
 
                         sentTimeoutMessage = true
 
@@ -64,7 +64,7 @@ const sendMessage = async (
                 clearInterval(timeoutInterval)
 
                 if (sentTimeoutMessage) {
-                    message.edit(embed)
+                    message.edit({ embeds: [embed] })
                     sentTimeoutMessage = false
                 }
 
@@ -77,7 +77,7 @@ const sendMessage = async (
                             inactiveEmbed.setColor(inactiveColors[counter])
 
                             inactiveEmbed.setTitle(`This message will auto-delete in ${counter} seconds because of inactivity!`)
-                            message.edit(inactiveEmbed)
+                            message.edit({ embeds: [inactiveEmbed] })
 
                             sentTimeoutMessage = true
 
@@ -97,11 +97,11 @@ const sendMessage = async (
                 }, 300000)
             }
 
-            const letters: string[] = ['🇦', '🇧', '🇨', '🇩', '🇪']
+            const letters: (string | null)[] = ['🇦', '🇧', '🇨', '🇩', '🇪']
             var selectedList: string[] = []
 
             reactionAddListner = async (reaction: MessageReaction, user: User) => {
-                if (reaction.message.id == message.id && reactions.includes(reaction.emoji.name)) {
+                if (reaction.message.id == message.id && reactions.includes(String(reaction.emoji.name))) {
                     if (letters.includes(reaction.emoji.name)) {
                         resetTimeout()
 
@@ -291,7 +291,7 @@ const sendMessage = async (
 
             reactionRemoveListner = async (reaction: MessageReaction) => {
                 if (reaction.message.id == message.id) {
-                    if (letters.includes(reaction.emoji.name) && reactions.includes(reaction.emoji.name)) {
+                    if (letters.includes(reaction.emoji.name) && reactions.includes(String(reaction.emoji.name))) {
                         resetTimeout()
 
                         var index: number = letters.indexOf(reaction.emoji.name)

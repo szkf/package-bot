@@ -1,4 +1,4 @@
-import { Message, MessageEmbed, TextChannel } from 'discord.js'
+import { ColorResolvable, Message, MessageEmbed, TextChannel } from 'discord.js'
 import client from '../PackageBot'
 import sendStatus from './sendStatus'
 
@@ -10,12 +10,12 @@ const getNote = (channel: TextChannel): Promise<string> => {
         const noteEmbed: MessageEmbed = new Discord.MessageEmbed()
         noteEmbed.setColor('BLUE').setTitle('Add a Note!').setDescription(`Type \`${prefix}note <note>\` to add a note!`)
 
-        channel.send(noteEmbed).then((message: Message) => {
+        channel.send({ embeds: [noteEmbed] }).then((message: Message) => {
             var messageListner: any
 
             const inactiveEmbed: MessageEmbed = new Discord.MessageEmbed()
             inactiveEmbed.setColor('YELLOW').setFooter('React to cancel!')
-            const inactiveColors: string[] = ['RED', 'ORANGE', 'GOLD', 'YELLOW']
+            const inactiveColors: ColorResolvable[] = ['RED', 'ORANGE', 'GOLD', 'YELLOW']
             var timeoutInterval: any
             var sentTimeoutMessage: boolean = false
 
@@ -26,7 +26,7 @@ const getNote = (channel: TextChannel): Promise<string> => {
 
                     inactiveEmbed.setTitle(`This message will auto-delete in ${counter} seconds because of inactivity!`)
                     if (message.editable == true) {
-                        message.edit(inactiveEmbed)
+                        message.edit({ embeds: [inactiveEmbed] })
                     }
 
                     sentTimeoutMessage = true
@@ -50,7 +50,7 @@ const getNote = (channel: TextChannel): Promise<string> => {
 
                 if (sentTimeoutMessage) {
                     if (message.editable == true) {
-                        message.edit(noteEmbed)
+                        message.edit({ embeds: [noteEmbed] })
                     }
                     sentTimeoutMessage = false
                 }
@@ -62,7 +62,7 @@ const getNote = (channel: TextChannel): Promise<string> => {
 
                         inactiveEmbed.setTitle(`This message will auto-delete in ${counter} seconds because of inactivity!`)
                         if (message.editable == true) {
-                            message.edit(inactiveEmbed)
+                            message.edit({ embeds: [inactiveEmbed] })
                         }
 
                         sentTimeoutMessage = true

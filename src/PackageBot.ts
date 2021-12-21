@@ -11,6 +11,22 @@ const mongoose = require('mongoose')
 
 const token = process.env.BOT_TOKEN
 const client = new Discord.Client({
+    intents: [
+        'GUILDS',
+        'GUILD_MEMBERS',
+        'GUILD_BANS',
+        'GUILD_EMOJIS_AND_STICKERS',
+        'GUILD_INTEGRATIONS',
+        'GUILD_WEBHOOKS',
+        'GUILD_INVITES',
+        'GUILD_VOICE_STATES',
+        'GUILD_MESSAGES',
+        'GUILD_MESSAGE_REACTIONS',
+        'GUILD_MESSAGE_TYPING',
+        'DIRECT_MESSAGES',
+        'DIRECT_MESSAGE_REACTIONS',
+        'DIRECT_MESSAGE_TYPING',
+    ],
     presence: {
         status: 'online',
         activity: {
@@ -34,14 +50,14 @@ client.once('ready', async () => {
 })
 
 const versions = [
-    { version: 'Version 2.1.0 (Current)', changelog: [` - Added UPS support!`] },
-    { version: 'Version 2.0.0', changelog: [' - Rewritten in TypeScript', ' - Uses MongoDB'] },
-    { version: 'Version 1.0.0', changelog: ['***First release***', ` - Type ${prefix}help to view all commands!`] },
+    { version: 'Version 2.1.0 (Current)', changelog: [` - Added UPS support!`].join('\n') },
+    { version: 'Version 2.0.0', changelog: [' - Rewritten in TypeScript', ' - Uses MongoDB'].join('\n') },
+    { version: 'Version 1.0.0', changelog: ['***First release***', ` - Type ${prefix}help to view all commands!`].join('\n') },
 ]
 
 var init = false
 
-client.on('message', async (message: any) => {
+client.on('messageCreate', async (message: any) => {
     /*
         INIT
     */
@@ -85,7 +101,7 @@ client.on('message', async (message: any) => {
     */
 
     if (message.content.toLowerCase().startsWith(`${prefix}version`) || message.content.toLowerCase().startsWith(`${prefix}v`)) {
-        showVersion(message.channel, versions, 0)
+        await showVersion(message.channel, versions, 0)
     }
 
     /*
@@ -96,10 +112,10 @@ client.on('message', async (message: any) => {
         const couriersEmbed: MessageEmbed = new Discord.MessageEmbed()
         couriersEmbed
             .setTitle('Supported Couriers:')
-            .setDescription(['*DPD*', '*GLS*', '*UPS*'])
+            .setDescription(['*DPD*', '*GLS*', '*UPS*'].join('\n'))
             .setColor('GREEN')
             .setFooter('Support for more couriers coming soon!')
-        message.channel.send(couriersEmbed)
+        message.channel.send({ embeds: [couriersEmbed] })
     }
 
     /*
@@ -142,19 +158,21 @@ client.on('message', async (message: any) => {
         helpEmbed
             .setTitle('PackageBot Commands:')
             .setColor('GREEN')
-            .setDescription([
-                `\t- \`${prefix}help\` - shows this message!`,
-                `\t- \`${prefix}couriers\` - shows the list of supported couriers!`,
-                `\t- \`${prefix}stats\` - shows statistics about the bot!`,
-                `\t- \`${prefix}track <package number> <courier>\` - shows info about the package!`,
-                `\t- \`${prefix}add <package number> <courier>\` - add the package to your tracking liszt!`,
-                `\t- \`${prefix}list\` - shows your tracking liszt!`,
-                `\t- \`${prefix}init\` - turns the bot on!`,
-                `\t- \`${prefix}version\`, \`${prefix}v\` - shows release notes for PackageBot!`,
-                `\t- \`${prefix}debug <super secret parms> <other secret parms>\` - super secret stuff, only for authorised people!`,
-            ])
+            .setDescription(
+                [
+                    `\t- \`${prefix}help\` - shows this message!`,
+                    `\t- \`${prefix}couriers\` - shows the list of supported couriers!`,
+                    `\t- \`${prefix}stats\` - shows statistics about the bot!`,
+                    `\t- \`${prefix}track <package number> <courier>\` - shows info about the package!`,
+                    `\t- \`${prefix}add <package number> <courier>\` - add the package to your tracking liszt!`,
+                    `\t- \`${prefix}list\` - shows your tracking liszt!`,
+                    `\t- \`${prefix}init\` - turns the bot on!`,
+                    `\t- \`${prefix}version\`, \`${prefix}v\` - shows release notes for PackageBot!`,
+                    `\t- \`${prefix}debug <super secret parms> <other secret parms>\` - super secret stuff, only for authorised people!`,
+                ].join('\n')
+            )
 
-        message.channel.send(helpEmbed)
+        message.channel.send({ embeds: [helpEmbed] })
     }
 
     /*

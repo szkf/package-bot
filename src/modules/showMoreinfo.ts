@@ -44,17 +44,17 @@ const showMoreInfo = async (channel: TextChannel, packages: PackageInterface[], 
             .addFields(
                 {
                     name: 'Date:',
-                    value: dateField,
+                    value: dateField.join('\n'),
                     inline: true,
                 },
                 {
                     name: 'Status:',
-                    value: statusField,
+                    value: statusField.join('\n'),
                     inline: true,
                 },
                 {
                     name: 'Location:',
-                    value: locationField,
+                    value: locationField.join('\n'),
                     inline: true,
                 }
             )
@@ -65,7 +65,7 @@ const showMoreInfo = async (channel: TextChannel, packages: PackageInterface[], 
                     '🗑️ to delete the package from your tracking liszt!',
                     '📝 to edit the package note!',
                     '◀️ or ▶️ to go back and forth between selected packages!',
-                ],
+                ].join('\n'),
                 true
             )
 

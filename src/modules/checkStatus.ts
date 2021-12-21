@@ -46,12 +46,13 @@ const checkStatus = async (message: Message) => {
                         .addField(`${pcg.courier.toUpperCase()} Package Number ${pcg.packageNum.toUpperCase()}`, pcg.note, false)
                         .setColor('GREEN')
 
+                    var attachment
+
                     if (changeAmount == 4) {
                         if (currentStatus[2].includes('doręczona')) {
-                            const attachment = new Discord.MessageAttachment('../assets/PackageDelivered.png', 'PackageDelivered.png')
+                            attachment = new Discord.MessageAttachment('../assets/PackageDelivered.png', 'PackageDelivered.png')
 
                             statusChangeEmbed.setTitle('A Package in Your Tracking Liszt Has Been Delivered!')
-                            statusChangeEmbed.attachFiles(attachment)
                             statusChangeEmbed.setThumbnail('attachment://PackageDelivered.png')
                         }
                         statusChangeEmbed.addFields(
@@ -74,10 +75,9 @@ const checkStatus = async (message: Message) => {
                     } else {
                         for (var j: number = 0; j < changeAmount / 4; j++) {
                             if (currentStatus[j * 4 + 2].includes('doręczona')) {
-                                const attachment = new Discord.MessageAttachment('../assets/PackageDelivered.png', 'PackageDelivered.png')
+                                attachment = new Discord.MessageAttachment('../assets/PackageDelivered.png', 'PackageDelivered.png')
 
                                 statusChangeEmbed.setTitle('A Package in Your Tracking Liszt Has Been Delivered!')
-                                statusChangeEmbed.attachFiles(attachment)
                                 statusChangeEmbed.setThumbnail('attachment://PackageDelivered.png')
                             }
 
@@ -102,7 +102,7 @@ const checkStatus = async (message: Message) => {
                         }
                     }
 
-                    channel.send(statusChangeEmbed)
+                    channel.send({ embeds: [statusChangeEmbed], files: [attachment] })
                 }
             }
         }

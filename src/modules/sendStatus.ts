@@ -31,7 +31,7 @@ const sendStatus = async (
         if (title != '') statusEmbed.setTitle(title)
 
         if (timeout != -1) {
-            channel.send(statusEmbed).then((msg) => {
+            channel.send({ embeds: [statusEmbed] }).then((msg) => {
                 setTimeout(async () => {
                     if (msg.deletable) {
                         await msg.delete()
@@ -41,7 +41,7 @@ const sendStatus = async (
                 }, timeout)
             })
         } else {
-            channel.send(statusEmbed)
+            channel.send({ embeds: [statusEmbed] })
         }
     })
 }
