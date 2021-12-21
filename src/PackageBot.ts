@@ -1,12 +1,14 @@
 //import { Collection } from 'discord.js'
 
+require('dotenv').config({ path: __dirname + '/../.env' })
+
 import { MessageEmbed } from 'discord.js'
 import sendStatus from './modules/sendStatus'
 
 const Discord = require('discord.js')
 const { debugPrefix, prefix } = require('../config.json')
 const mongoose = require('mongoose')
-require('dotenv').config({ path: '../.env' })
+
 const token = process.env.BOT_TOKEN
 const client = new Discord.Client({
     presence: {
