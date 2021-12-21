@@ -1,12 +1,33 @@
 ![](https://github.com/szkf/package-bot/blob/master/PackageBot.png)
-# package-bot
+# PackageBot
 A Discord Parcel Tracking Bot
+
+## Feature Overview
+### Parcel Tracking
+PackageBot allows you to check the status of a parcel directly from Discord.
+
+<img src="https://github.com/szkf/package-bot/blob/master/assets/Tracking.png" width="500px"/>
+
+### Tracking List
+PackageBot is going to alert you when the status of a package added to the tracking list changes.
+
+<img src="https://github.com/szkf/package-bot/blob/master/assets/List.png" width="350px" />
+
+### Notes
+Notes are an easy way to differentiate between parcels.<br />They are displayed in the tracking list next to the package number.
+
+### Status Change Notifications
+
+<img src="https://github.com/szkf/package-bot/blob/master/assets/Notification.png" width="500px" />
+
+### Supported couriers
+The latest version (v2.1.1) supports DPD, GLS and UPS.<br />Support for more couriers coming soon!
 
 ## Usage
 ### Adding new packages to list
 To add a new package to your tracking list, type `p!add <package number> <courier>`
 
-If the package number is correct and the courier is supported the bot will ask you to add a note, else the bot will send an error message. Notes are displayed in the tracking list next to the package number and are a easy way to differentiate between parcels.
+If the package number is correct and the courier is supported the bot will ask you to add a note, else the bot will send an error message. Notes are displayed in the tracking list next to the package number and are an easy way to differentiate between parcels.
 
 To add a note type `p!note <note>` <br />
 Notes are limited to 40 characters max. and can include emojis.
@@ -37,11 +58,11 @@ PackageBot can also alert you of package status changes. To turn this feature on
 
 ***Note!*** This is not required for use of the tracking feature (`p!track`) but if not turned on the tracking list will not update.
 
-### Viewing the PackageBot statistics
-`p!stats`
-
 ### Viewing the list of supported couriers
 `p!couriers`
+
+### Release notes
+`p!version` or `p!v`
 
 ### Viewing the list of commands
 `p!help` displays the list of commands and describes their funciton
