@@ -101,6 +101,7 @@ const sendMessage = async (
             var selectedList: string[] = []
 
             reactionAddListner = async (reaction: MessageReaction, user: User) => {
+                if (client.user.id == user.id) return
                 if (reaction.message.id == message.id && reactions.includes(String(reaction.emoji.name))) {
                     if (letters.includes(reaction.emoji.name)) {
                         resetTimeout()
@@ -289,7 +290,8 @@ const sendMessage = async (
                 }
             }
 
-            reactionRemoveListner = async (reaction: MessageReaction) => {
+            reactionRemoveListner = async (reaction: MessageReaction, user: User) => {
+                if (client.user.id == user.id) return
                 if (reaction.message.id == message.id) {
                     if (letters.includes(reaction.emoji.name) && reactions.includes(String(reaction.emoji.name))) {
                         resetTimeout()

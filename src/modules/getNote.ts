@@ -32,7 +32,7 @@ const getNote = (channel: TextChannel): Promise<string> => {
                     sentTimeoutMessage = true
 
                     if (counter == 0) {
-                        client.removeListener('message', messageListner)
+                        client.removeListener('messageCreate', messageListner)
                         if (message.deletable == true) {
                             message.delete()
                         }
@@ -68,7 +68,7 @@ const getNote = (channel: TextChannel): Promise<string> => {
                         sentTimeoutMessage = true
 
                         if (counter == 0) {
-                            client.removeListener('message', messageListner)
+                            client.removeListener('messageCreate', messageListner)
                             clearTimeout(messageTimeout)
                             clearInterval(timeoutInterval)
                             if (message.deletable == true) {
@@ -87,7 +87,7 @@ const getNote = (channel: TextChannel): Promise<string> => {
                     resetTimeout()
 
                     if (msg.content.split(`${prefix}note `)[1] != '' && msg.content.split(`${prefix}note `)[1].length <= 40) {
-                        client.removeListener('message', messageListner)
+                        client.removeListener('messageCreate', messageListner)
                         clearTimeout(messageTimeout)
                         clearInterval(timeoutInterval)
                         if (message.deletable == true) {
@@ -106,7 +106,7 @@ const getNote = (channel: TextChannel): Promise<string> => {
                 }
             }
 
-            client.on('message', messageListner)
+            client.on('messageCreate', messageListner)
         })
     })
 }
