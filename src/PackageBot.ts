@@ -50,7 +50,8 @@ client.once('ready', async () => {
 })
 
 const versions = [
-    { version: 'Version 2.1.0 (Current)', changelog: [` - Added UPS support!`].join('\n') },
+    { version: 'Version 3.0.0 (Current)', changelog: ' - Uses Discord.js v13' },
+    { version: 'Version 2.1.0', changelog: [` - Added UPS support!`].join('\n') },
     { version: 'Version 2.0.0', changelog: [' - Rewritten in TypeScript', ' - Uses MongoDB'].join('\n') },
     { version: 'Version 1.0.0', changelog: ['***First release***', ` - Type ${prefix}help to view all commands!`].join('\n') },
 ]

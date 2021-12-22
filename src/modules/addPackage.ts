@@ -27,8 +27,6 @@ const addPackage = async (data: PackageInterface, channel: TextChannel, debug: b
             }
         }
 
-        console.log('asdf')
-
         try {
             await data.getCurrentStatus()
         } catch (err) {
