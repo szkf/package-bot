@@ -2,11 +2,22 @@ export {}
 
 const puppeteer = require('puppeteer')
 
-const trackGLS = async (packageNum: string) => {
+const trackGLS = async (packageNum: string, lang: string) => {
     let browser = await puppeteer.launch()
     let page = await browser.newPage()
 
-    await page.goto(`https://gls-group.eu/PL/pl/sledzenie-paczek?match=${packageNum}`, {
+    var trackURL: string = ''
+
+    switch (lang) {
+        case 'EN':
+            trackURL = `https://gls-group.eu/GROUP/en/parcel-tracking?match=${packageNum}`
+            break
+        case 'PL':
+            trackURL = `https://gls-group.eu/PL/pl/sledzenie-paczek?match=${packageNum}`
+            break
+    }
+
+    await page.goto(trackURL, {
         waitUntil: 'networkidle2',
     })
 

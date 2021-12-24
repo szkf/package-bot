@@ -287,6 +287,19 @@ const sendMessage = async (
                         returnVal = { action: 'FORWARD' }
                         resolve()
                     }
+                    if (reaction.emoji.name != null && reactions.includes(reaction.emoji.name)) {
+                        resetTimeout()
+
+                        client.removeListener('messageReactionRemove', reactionRemoveListner)
+                        client.removeListener('messageReactionAdd', reactionAddListner)
+                        if (message.deletable == true) {
+                            await message.delete()
+                        }
+                        clearInterval(timeoutInterval)
+                        clearTimeout(messageTimeout)
+                        returnVal = { actionIndx: reactions.indexOf(reaction.emoji.name) }
+                        resolve()
+                    }
                 }
             }
 

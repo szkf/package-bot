@@ -49,7 +49,7 @@ const checkStatus = async (message: Message) => {
                     var attachment
 
                     if (changeAmount == 4) {
-                        if (currentStatus[2].includes('doręczona')) {
+                        if (currentStatus[2].includes('doręczona') || currentStatus[2].includes('delivered')) {
                             attachment = new Discord.MessageAttachment('../assets/PackageDelivered.png', 'PackageDelivered.png')
 
                             statusChangeEmbed.setTitle('A Package in Your Tracking Liszt Has Been Delivered!')
@@ -74,7 +74,7 @@ const checkStatus = async (message: Message) => {
                         )
                     } else {
                         for (var j: number = 0; j < changeAmount / 4; j++) {
-                            if (currentStatus[j * 4 + 2].includes('doręczona')) {
+                            if (currentStatus[j * 4 + 2].includes('doręczona') || currentStatus[j * 4 + 2].includes('delivered')) {
                                 attachment = new Discord.MessageAttachment('../assets/PackageDelivered.png', 'PackageDelivered.png')
 
                                 statusChangeEmbed.setTitle('A Package in Your Tracking Liszt Has Been Delivered!')

@@ -2,11 +2,22 @@ export {}
 
 const puppeteer = require('puppeteer')
 
-const trackDPD = async (packageNum: string) => {
+const trackDPD = async (packageNum: string, lang: string) => {
     let browser = await puppeteer.launch()
     let page = await browser.newPage()
 
-    await page.goto(`https://tracktrace.dpd.com.pl/parcelDetails?typ=1&p1=${packageNum}`, {
+    var trackURL: string = ''
+
+    switch (lang) {
+        case 'EN':
+            trackURL = `https://tracktrace.dpd.com.pl/EN/parcelDetails?typ=1&p1=${packageNum}`
+            break
+        case 'PL':
+            trackURL = `https://tracktrace.dpd.com.pl/parcelDetails?typ=1&p1=${packageNum}`
+            break
+    }
+
+    await page.goto(trackURL, {
         waitUntil: 'networkidle2',
     })
 

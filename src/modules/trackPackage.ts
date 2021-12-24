@@ -1,20 +1,24 @@
 export {}
 
-const trackDPD = require('./trackDPD.js')
-const trackGLS = require('./trackGLS.js')
+const trackDPD = require('./trackDPD')
+const trackGLS = require('./trackGLS')
 const trackUPS = require('./trackUPS')
+import { getSettings } from './settings'
 
 const trackPackage = async (packageNum: string, courier: string) => {
     var status: string[] = []
+
+    const settings = await getSettings()
+
     switch (courier.toLowerCase()) {
         case 'dpd':
-            status = await trackDPD(packageNum)
+            status = await trackDPD(packageNum, settings.lang)
             break
         case 'gls':
-            status = await trackGLS(packageNum)
+            status = await trackGLS(packageNum, settings.lang)
             break
         case 'ups':
-            status = await trackUPS(packageNum)
+            status = await trackUPS(packageNum, settings.lang)
             break
     }
 

@@ -4,6 +4,8 @@ require('dotenv').config({ path: __dirname + '/../.env' })
 
 import { MessageEmbed } from 'discord.js'
 import sendStatus from './modules/sendStatus'
+import { setLanguage } from './modules/setLanguage'
+import { getSettings } from './modules/settings'
 
 const Discord = require('discord.js')
 const { debugPrefix, prefix } = require('../config.json')
@@ -36,9 +38,14 @@ const client = new Discord.Client({
     },
 })
 
-mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true }).catch((err: string) => {
-    console.log(err)
-})
+mongoose
+    .connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(async () => {
+        await getSettings()
+    })
+    .catch((err: string) => {
+        console.log(err)
+    })
 
 process.on('unhandledRejection', (err) => {
     console.log('\x1b[31m' + `Uncaught error:` + '\x1b[0m')
@@ -196,6 +203,14 @@ client.on('messageCreate', async (message: any) => {
             var pcg = new Package({ packageNum: i, courier: 'dpd', note: i.toString(), status: ['test', 'test', 'test', 'test'] })
             await addPackage(pcg, message.channel, true)
         }
+    }
+
+    /*
+        LANGUAGE
+    */
+
+    if (message.content.toLowerCase().startsWith(`${prefix}lang`) || message.content.toLowerCase().startsWith(`${prefix}language`)) {
+        setLanguage(message.channel)
     }
 })
 
