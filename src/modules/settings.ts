@@ -27,6 +27,7 @@ export const updateSettings = async (lang: string = '') => {
         }
     } else {
         try {
+            mongoose.set('useFindAndModify', false)
             await SettingsModel.findOneAndUpdate({ id: 0 }, { id: 0, lang: lang == '' ? exists.lang : lang })
         } catch (err) {
             console.log(err)

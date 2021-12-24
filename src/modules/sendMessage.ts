@@ -287,7 +287,11 @@ const sendMessage = async (
                         returnVal = { action: 'FORWARD' }
                         resolve()
                     }
-                    if (reaction.emoji.name != null && reactions.includes(reaction.emoji.name)) {
+                    if (
+                        reaction.emoji.name != null &&
+                        reactions.includes(reaction.emoji.name) &&
+                        !['🗑️', '➡️', '⬅️', '✅', 'ℹ️', '❌', '📝', '◀️', '▶️'].includes(reaction.emoji.name)
+                    ) {
                         resetTimeout()
 
                         client.removeListener('messageReactionRemove', reactionRemoveListner)
@@ -319,6 +323,7 @@ const sendMessage = async (
             client.on('messageReactionRemove', reactionRemoveListner)
         })
     })
+
     return returnVal
 }
 
