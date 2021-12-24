@@ -20,8 +20,14 @@ Notes are an easy way to differentiate between parcels.<br />They are displayed 
 
 <img src="https://github.com/szkf/package-bot/blob/master/assets/Notification.png" width="500px" />
 
-### Supported couriers
-The latest version (v2.1.1) supports DPD, GLS and UPS.<br />Support for more couriers coming soon!
+### Supported Couriers
+The latest version (v3.1.1) supports DPD, GLS and UPS.<br />Support for more couriers coming soon!
+
+### Language Support
+As of version 3.1.1 PackageBot supports the following languages:
+* English
+* Polish
+Support for more coming soon.
 
 ## Usage
 ### Adding new packages to list
@@ -57,6 +63,10 @@ To view the full status history of a parcel select the packages and press :infor
 PackageBot can also alert you of package status changes. To turn this feature on type `p!init`.
 
 ***Note!*** This is not required for use of the tracking feature (`p!track`) but if not turned on the tracking list will not update.
+
+### Changing the language
+`p!lang` or `p!language`
+Supported languages: English, Polish. More coming soon!
 
 ### Viewing the list of supported couriers
 `p!couriers`
