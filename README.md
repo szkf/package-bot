@@ -2,6 +2,23 @@
 # PackageBot
 A Discord Parcel Tracking Bot
 
+## Table of Contents
+- [Feature Overview](#feature-overview)
+  - [Tracking List](#tracking-list)
+  - [Notes](#notes)
+  - [Status Change Notifications](#status-change-notifications)
+  - [Supported Couriers](#supported-couriers)
+  - [Language Support](#language-support)
+- [Usage](#usage)
+  - [Adding Packages](#adding-new-packages-to-list)
+  - [Checking Package Status](#checking-a-package-status-without-adding-it-to-the-tracking-list)
+  - [Displaying The Tracking List](#displaying-the-tracking-list)
+    - [Deleting Packages](#deleting-packages-from-list)
+    - [Editing Notes](#editing-a-note)
+    - [Viewing Status History](#viewing-the-full-status-history)
+  - [Auto Status Checking](#turning-the-auto-status-checking-on)
+- [Setup](#setup)
+
 ## Feature Overview
 ### Parcel Tracking
 PackageBot allows you to check the status of a parcel directly from Discord.
