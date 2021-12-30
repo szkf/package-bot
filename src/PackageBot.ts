@@ -2,7 +2,7 @@
 
 require('dotenv').config({ path: __dirname + '/../.env' })
 
-import { MessageEmbed } from 'discord.js'
+import { MessageEmbed, TextChannel } from 'discord.js'
 import sendStatus from './modules/sendStatus'
 import { setLanguage } from './modules/setLanguage'
 import { getSettings } from './modules/settings'
@@ -38,6 +38,50 @@ const client = new Discord.Client({
     },
 })
 
+var calls: number = 0
+var rateLimiterTime: number = 5
+var limitReached: boolean = false
+const maxCalls: number = 8
+
+const resetLimit = () => {
+    calls = 0
+}
+
+var limitReset = setInterval(() => {
+    resetLimit()
+}, 300000)
+
+const rateLimiter = () => {
+    limitReached = true
+    clearInterval(limitReset)
+    const interval = setInterval(() => {
+        rateLimiterTime -= 1
+    }, 60000)
+    setTimeout(() => {
+        clearInterval(interval)
+        limitReached = false
+        calls = 0
+        rateLimiterTime = 5
+        limitReset = setInterval(() => {
+            resetLimit()
+        }, 300000)
+        return
+    }, 300000)
+}
+
+const sendRateLimitMessage = (channel: TextChannel) => {
+    if (limitReached) rateLimiter()
+    sendStatus(
+        'WARN',
+        channel,
+        [
+            `You have exceeded the maximum of ${maxCalls} calls per 5 minutes!`,
+            `You will be able to track your packages in ${rateLimiterTime}` + (rateLimiterTime > 1 ? ' minutes' : ' minute'),
+        ].join('\n'),
+        { timeout: 5000, footer: `This doesn't affect the auto status checking!` }
+    )
+}
+
 mongoose
     .connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(async () => {
@@ -57,7 +101,11 @@ client.once('ready', async () => {
 })
 
 const versions = [
-    { version: 'Version 3.0.0 (Current)', changelog: ' - Uses Discord.js v13' },
+    { version: 'Version 3.2.0 (Current)', changelog: ' - Added Spam Protection' },
+    { version: 'Version 3.1.1', changelog: ' - Bugfixes Regarding Reactions' },
+    { version: 'Version 3.1.0', changelog: ' - English Language Support' },
+    { version: 'Version 3.0.0', changelog: ' - Uses Discord.js v13' },
+    { version: 'Version 2.1.1', changelog: ' - Changed status-checking interval to 5 minutes' },
     { version: 'Version 2.1.0', changelog: [` - Added UPS support!`].join('\n') },
     { version: 'Version 2.0.0', changelog: [' - Rewritten in TypeScript', ' - Uses MongoDB'].join('\n') },
     { version: 'Version 1.0.0', changelog: ['***First release***', ` - Type ${prefix}help to view all commands!`].join('\n') },
@@ -88,6 +136,14 @@ client.on('messageCreate', async (message: any) => {
     */
 
     if (message.content.toLowerCase().startsWith(`${prefix}track`)) {
+        if (calls >= maxCalls) {
+            if (!limitReached) limitReached = true
+            sendRateLimitMessage(message.channel)
+            return
+        }
+
+        calls++
+
         try {
             const command = message.content.split(/ +/)
             const pcg = new Package({ packageNum: command[1], courier: command[2] })
@@ -131,6 +187,14 @@ client.on('messageCreate', async (message: any) => {
     */
 
     if (message.content.toLowerCase().startsWith(`${prefix}add`)) {
+        if (calls >= maxCalls) {
+            if (!limitReached) limitReached = true
+            sendRateLimitMessage(message.channel)
+            return
+        }
+
+        calls++
+
         try {
             const command = message.content.split(/ +/)
             const pcg = new Package({
