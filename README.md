@@ -2,6 +2,23 @@
 # PackageBot
 A Discord Parcel Tracking Bot
 
+## Table of Contents
+- [Feature Overview](#feature-overview)
+  - [Tracking List](#tracking-list)
+  - [Notes](#notes)
+  - [Status Change Notifications](#status-change-notifications)
+  - [Supported Couriers](#supported-couriers)
+  - [Language Support](#language-support)
+- [Usage](#usage)
+  - [Adding Packages](#adding-new-packages-to-list)
+  - [Checking Package Status](#checking-a-package-status-without-adding-it-to-the-tracking-list)
+  - [Displaying The Tracking List](#displaying-the-tracking-list)
+    - [Deleting Packages](#deleting-packages-from-list)
+    - [Editing Notes](#editing-a-note)
+    - [Viewing Status History](#viewing-the-full-status-history)
+  - [Auto Status Checking](#turning-the-auto-status-checking-on)
+- [Setup](#setup)
+
 ## Feature Overview
 ### Parcel Tracking
 PackageBot allows you to check the status of a parcel directly from Discord.
@@ -20,8 +37,15 @@ Notes are an easy way to differentiate between parcels.<br />They are displayed 
 
 <img src="https://github.com/szkf/package-bot/blob/master/assets/Notification.png" width="500px" />
 
-### Supported couriers
-The latest version (v2.1.1) supports DPD, GLS and UPS.<br />Support for more couriers coming soon!
+### Supported Couriers
+The latest version (v3.1.1) supports DPD, GLS and UPS.<br />Support for more couriers coming soon!
+
+### Language Support
+As of version 3.1.1 PackageBot supports the following languages:
+* English
+* Polish
+
+Support for more coming soon.
 
 ## Usage
 ### Adding new packages to list
@@ -58,6 +82,11 @@ PackageBot can also alert you of package status changes. To turn this feature on
 
 ***Note!*** This is not required for use of the tracking feature (`p!track`) but if not turned on the tracking list will not update.
 
+### Changing the language
+`p!lang` or `p!language`
+
+Supported languages: English, Polish. More coming soon!
+
 ### Viewing the list of supported couriers
 `p!couriers`
 
@@ -66,3 +95,32 @@ PackageBot can also alert you of package status changes. To turn this feature on
 
 ### Viewing the list of commands
 `p!help` displays the list of commands and describes their funciton
+
+## Setup
+#### Step 1
+Clone this repo and compile the typescript code using `npx tsc`.
+#### Step 2
+Add a `.env` file to the cloned repositories root directory:
+```
+package-bot
+├── assets
+├── src
+├── dist (this folder is the output directory for tsc - it will appear after compiling)
+├── PackageBot.png
+├── README.md
+├── config.json
+├── package-lock.json
+├── package.json
+├── tsconfig.json
+└── + .env
+```
+The `.env` file should contain the following:
+```
+BOT_TOKEN=your_bot_token_copied_from_discord_dev_portal
+DB_CONNECTION=url_to_a_mongodb_database
+```
+***Note!*** Never share the bot token with anyone. <br />
+The database url can be any MongoDB hosting platform as well as a local database.
+#### Step 3
+Run the `PackageBot.js` file in the `/dist` directory using `node ./dist/PackageBot.js`. <br />
+***Note!*** PackageBot requires **Node 16.6 or higher**!
