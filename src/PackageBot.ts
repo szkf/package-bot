@@ -101,7 +101,8 @@ client.once('ready', async () => {
 })
 
 const versions = [
-    { version: 'Version 3.2.0 (Current)', changelog: ' - Added Spam Protection' },
+    { version: 'Version 3.2.1 (Current)', changelog: ' - Auto Detect Coureir' },
+    { version: 'Version 3.2.0', changelog: ' - Added Spam Protection' },
     { version: 'Version 3.1.1', changelog: ' - Bugfixes Regarding Reactions' },
     { version: 'Version 3.1.0', changelog: ' - English Language Support' },
     { version: 'Version 3.0.0', changelog: ' - Uses Discord.js v13' },
