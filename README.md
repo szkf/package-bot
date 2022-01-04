@@ -47,9 +47,12 @@ As of version 3.2.0 PackageBot supports the following languages:
 
 Support for more coming soon.
 
+### Auto Detect Courier
+PackageBot can detect the courier by package number.
+
 ## Usage
 ### Adding new packages to list
-To add a new package to your tracking list, type `p!add <package number> <courier>`
+To add a new package to your tracking list, type `p!add <package number> <courier (optional)>`
 
 If the package number is correct and the courier is supported the bot will ask you to add a note, else the bot will send an error message. Notes are displayed in the tracking list next to the package number and are an easy way to differentiate between parcels.
 
@@ -57,7 +60,7 @@ To add a note type `p!note <note>` <br />
 Notes are limited to 40 characters max. and can include emojis.
 
 ### Checking a package status without adding it to the tracking list
-To check the status of a package, type `p!track <package number> <courier>`
+To check the status of a package, type `p!track <package number> <courier (optional)>`
 
 If the provided data is correct the bot will display the current status of the parcel.
 It is also possible to add packages to the list via the tracking feature.
