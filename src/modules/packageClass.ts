@@ -1,4 +1,5 @@
 import mongoose = require('mongoose')
+import { getCourier } from './getCourier'
 const trackPackage = require('./trackPackage')
 
 export interface PackageInterface {
@@ -18,6 +19,8 @@ interface packageData {
     deleted: boolean
 }
 
+const couriers: string[] = ['dpd', 'gls', 'ups', '']
+
 class Package implements PackageInterface {
     packageNum: string
     courier: string
@@ -30,17 +33,29 @@ class Package implements PackageInterface {
             throw new Error('You did not specify the package number!\nProper usage `(p!add / p!track) <package number> <courier>`').message
         }
 
-        if (data.courier.toLowerCase() != 'dpd' && data.courier.toLowerCase() != 'gls' && data.courier.toLowerCase() != 'ups') {
-            if (data.courier == undefined) {
-                throw new Error(`You did not specify the courier!\nProper usage \`(p!add / p!track) <package number> <courier>\``).message
-            }
-            throw new Error(`We don't support the courier "${data.courier}"!
-Type \`p!couriers\` to see which couriers we support!`).message
-        }
-        this.packageNum = data.packageNum
-        this.courier = data.courier.toLowerCase()
-        this.note = data.note
+        var tempCourier: string = data.courier.toLowerCase()
 
+        if (!couriers.includes(tempCourier)) {
+            throw new Error(`We don't support the courier "${data.courier}"!\nType \`p!couriers\` to see which couriers we support!`)
+                .message
+        }
+
+        if (tempCourier == '') {
+            var matchCourier: string[] = getCourier(data.packageNum)
+            if (matchCourier.length == 0) {
+                throw new Error(
+                    `Couldn't match any courier to this package number!\nTry specifying the courier or check the list of supported couriers.`
+                ).message
+            } else if (matchCourier.length > 1) {
+                throw new Error(`Your tracking number format matches multiple couriers!\tPlease specify the courier`).message
+            } else {
+                tempCourier = matchCourier[0]
+            }
+        }
+
+        this.packageNum = data.packageNum
+        this.courier = tempCourier
+        this.note = data.note
         this.deleted = data.deleted
 
         if (data.deleted == undefined) {

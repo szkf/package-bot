@@ -146,7 +146,7 @@ client.on('messageCreate', async (message: any) => {
 
         try {
             const command = message.content.split(/ +/)
-            const pcg = new Package({ packageNum: command[1], courier: command[2] })
+            const pcg = new Package({ packageNum: command[1], courier: command.length > 2 ? command[2] : '' })
             await showPackage(pcg, message.channel)
         } catch (err) {
             await message.delete()
@@ -199,7 +199,7 @@ client.on('messageCreate', async (message: any) => {
             const command = message.content.split(/ +/)
             const pcg = new Package({
                 packageNum: command[1],
-                courier: command[2],
+                courier: command.length > 2 ? command[2] : '',
             })
 
             await addPackage(pcg, message.channel)
@@ -211,7 +211,7 @@ client.on('messageCreate', async (message: any) => {
                 {}
             )
         } catch (err) {
-            const errorFooter = err.split('{footer}')[1]
+            const errorFooter = err.includes('{footer}') ? err.split('{footer}')[1] : undefined
             if (errorFooter != undefined) {
                 sendStatus('ERROR', message.channel, err.split('{footer}')[0], { timeout: 5000, footer: errorFooter })
             } else {
