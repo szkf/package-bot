@@ -103,6 +103,8 @@ Supported languages: English, Polish. More coming soon!
 #### Step 1
 Clone this repo and compile the typescript code using `npx tsc`.
 #### Step 2
+Run `npm install` to install all required dependencies.
+#### Step 3
 Add a `.env` file to the cloned repositories root directory:
 ```
 package-bot
@@ -124,6 +126,6 @@ DB_CONNECTION=url_to_a_mongodb_database
 ```
 ***Note!*** Never share the bot token with anyone. <br />
 The database url can be any MongoDB hosting platform as well as a local database.
-#### Step 3
+#### Step 4
 Run the `PackageBot.js` file in the `/dist` directory using `node ./dist/PackageBot.js`. <br />
 ***Note!*** PackageBot requires **Node 16.6 or higher**!
