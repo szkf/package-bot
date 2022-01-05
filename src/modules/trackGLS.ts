@@ -6,16 +6,9 @@ const trackGLS = async (packageNum: string, lang: string) => {
     let browser = await puppeteer.launch()
     let page = await browser.newPage()
 
-    var trackURL: string = ''
+    var trackURL: string = `https://gls-group.eu/GROUP/en/parcel-tracking?match=${packageNum}`
 
-    switch (lang) {
-        case 'EN':
-            trackURL = `https://gls-group.eu/GROUP/en/parcel-tracking?match=${packageNum}`
-            break
-        case 'PL':
-            trackURL = `https://gls-group.eu/PL/pl/sledzenie-paczek?match=${packageNum}`
-            break
-    }
+    if (lang == 'PL') trackURL = `https://gls-group.eu/PL/pl/sledzenie-paczek?match=${packageNum}`
 
     await page.goto(trackURL, {
         waitUntil: 'networkidle2',

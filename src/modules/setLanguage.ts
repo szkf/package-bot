@@ -9,20 +9,22 @@ const Discord = require('discord.js')
 export const setLanguage = async (channel: TextChannel) => {
     const currentSettings = await getSettings()
 
-    const languageList: string[] = ['🇬🇧', '🇵🇱']
-    const languageTxt: string[] = ['EN', 'PL']
-    const languageFullTxt: string[] = ['English', 'Polish']
+    const languageList: string[] = ['🇬🇧', '🇵🇱', '🇩🇪']
+    const languageTxt: string[] = ['EN', 'PL', 'DE']
+    const languageFullTxt: string[] = ['English', 'Polish', 'German']
+
+    var langStr: string = `**Current language: ${
+        languageFullTxt[languageTxt.indexOf(currentSettings.lang)]
+    }**\nReact with a flag to change language!`
+
+    for (var i = 0; i < languageList.length; i++) {
+        langStr += `\n*${languageList[i]} for ${languageFullTxt[i]}*`
+    }
+
+    langStr += '\nAs of now the German language only supports UPS parcels!'
 
     const languageEmbed: MessageEmbed = new Discord.MessageEmbed()
-    languageEmbed
-        .setColor('BLURPLE')
-        .setTitle('Language')
-        .setDescription(
-            `**Current language: ${
-                languageFullTxt[languageTxt.indexOf(currentSettings.lang)]
-            }**\nReact with a flag to change language!\n*🇬🇧 for English*\n*🇵🇱 for Polish*`
-        )
-        .setFooter('Support for more languages coming soon!')
+    languageEmbed.setColor('BLURPLE').setTitle('Language').setDescription(langStr).setFooter('Support for more languages coming soon!')
 
     const returnVal = await sendMessage(languageEmbed, languageList, channel, {})
 

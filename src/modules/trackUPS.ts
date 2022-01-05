@@ -6,16 +6,10 @@ const trackUPS = async (packageNum: string, lang: string) => {
     let browser = await puppeteer.launch({})
     let page = await browser.newPage()
 
-    var trackURL: string = ''
+    var trackURL: string = `https://www.ups.com/track?loc=en_GB&tracknum=${packageNum}`
 
-    switch (lang) {
-        case 'EN':
-            trackURL = `https://www.ups.com/track?loc=en_GB&tracknum=${packageNum}`
-            break
-        case 'PL':
-            trackURL = `https://www.ups.com/track?loc=pl_PL&tracknum=${packageNum}`
-            break
-    }
+    if (lang == 'PL') trackURL = `https://www.ups.com/track?loc=pl_PL&tracknum=${packageNum}`
+    if (lang == 'DE') trackURL = `https://www.ups.com/track?loc=de_DE&tracknum=${packageNum}`
 
     await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.0 Safari/537.36')
     await page.setExtraHTTPHeaders({

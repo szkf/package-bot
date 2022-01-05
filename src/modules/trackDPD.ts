@@ -6,16 +6,9 @@ const trackDPD = async (packageNum: string, lang: string) => {
     let browser = await puppeteer.launch()
     let page = await browser.newPage()
 
-    var trackURL: string = ''
+    var trackURL: string = `https://tracktrace.dpd.com.pl/EN/parcelDetails?typ=1&p1=${packageNum}`
 
-    switch (lang) {
-        case 'EN':
-            trackURL = `https://tracktrace.dpd.com.pl/EN/parcelDetails?typ=1&p1=${packageNum}`
-            break
-        case 'PL':
-            trackURL = `https://tracktrace.dpd.com.pl/parcelDetails?typ=1&p1=${packageNum}`
-            break
-    }
+    if (lang == 'PL') trackURL = `https://tracktrace.dpd.com.pl/parcelDetails?typ=1&p1=${packageNum}`
 
     await page.goto(trackURL, {
         waitUntil: 'networkidle2',
