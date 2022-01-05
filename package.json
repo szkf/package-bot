@@ -1,6 +1,6 @@
 {
     "name": "packagebot",
-    "version": "1.0.0",
+    "version": "3.3.0",
     "description": "Package Tracking Discord Bot",
     "main": "PackageBot.js",
     "scripts": {
