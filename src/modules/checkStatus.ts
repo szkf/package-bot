@@ -41,7 +41,7 @@ const checkStatus = async (message: Message) => {
 
                     const statusChangeEmbed: MessageEmbed = new Discord.MessageEmbed()
                     statusChangeEmbed
-                        .setTitle('A Package in Your Tracking Liszt Has Changed Status!')
+                        .setTitle('A Package in Your Tracking List Has Changed Status!')
                         .setDescription(`Type \`${prefix}track to view details about this package!\``)
                         .addField(`${pcg.courier.toUpperCase()} Package Number ${pcg.packageNum.toUpperCase()}`, pcg.note, false)
                         .setColor('GREEN')
@@ -52,7 +52,7 @@ const checkStatus = async (message: Message) => {
                         if (currentStatus[2].includes('doręczona') || currentStatus[2].includes('delivered')) {
                             attachment = new Discord.MessageAttachment('../assets/PackageDelivered.png', 'PackageDelivered.png')
 
-                            statusChangeEmbed.setTitle('A Package in Your Tracking Liszt Has Been Delivered!')
+                            statusChangeEmbed.setTitle('A Package in Your Tracking List Has Been Delivered!')
                             statusChangeEmbed.setThumbnail('attachment://PackageDelivered.png')
                         }
                         statusChangeEmbed.addFields(
@@ -77,7 +77,7 @@ const checkStatus = async (message: Message) => {
                             if (currentStatus[j * 4 + 2].includes('doręczona') || currentStatus[j * 4 + 2].includes('delivered')) {
                                 attachment = new Discord.MessageAttachment('../assets/PackageDelivered.png', 'PackageDelivered.png')
 
-                                statusChangeEmbed.setTitle('A Package in Your Tracking Liszt Has Been Delivered!')
+                                statusChangeEmbed.setTitle('A Package in Your Tracking List Has Been Delivered!')
                                 statusChangeEmbed.setThumbnail('attachment://PackageDelivered.png')
                             }
 
