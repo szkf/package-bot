@@ -61,8 +61,8 @@ const showMoreInfo = async (channel: TextChannel, packages: PackageInterface[], 
             .addField(
                 'React with:',
                 [
-                    '⬅️ to go back to your tracking liszt!',
-                    '🗑️ to delete the package from your tracking liszt!',
+                    '⬅️ to go back to your tracking list!',
+                    '🗑️ to delete the package from your tracking list!',
                     '📝 to edit the package note!',
                     '◀️ or ▶️ to go back and forth between selected packages!',
                 ].join('\n'),
