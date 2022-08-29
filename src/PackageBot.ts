@@ -1,5 +1,3 @@
-//import { Collection } from 'discord.js'
-
 require('dotenv').config({ path: __dirname + '/../.env' })
 
 import { MessageEmbed, TextChannel } from 'discord.js'
