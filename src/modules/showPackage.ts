@@ -38,7 +38,7 @@ const showPackage = async (pcg: PackageInterface, channel: TextChannel, status: 
         packageEmbed
             .addField('React with:', ['✅ to add the package to your tracking list!', 'ℹ️ to see the full delivery history!'].join('\n'))
             .setFooter(
-                'To remove the item from your tracking liszt, select the package you want to delete and react with the trash can emoji!'
+                'To remove the item from your tracking list, select the package you want to delete and react with the trash can emoji!'
             )
 
         dateField.push(status[0] + ' ' + status[1])
