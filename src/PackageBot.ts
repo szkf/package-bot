@@ -86,12 +86,12 @@ mongoose
     })
 
 process.on('unhandledRejection', (err) => {
-    console.log('\x1b[31m' + `Uncaught error:` + '\x1b[0m')
+    console.log('Uncaught error:')
     console.log(err)
 })
 
 client.once('ready', async () => {
-    console.log('\x1b[32m' + '\x1b[1m' + 'PackageBot is ready!' + '\x1b[0m')
+    console.log('PackageBot is ready!')
 })
 
 const versions = [
