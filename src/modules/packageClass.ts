@@ -1,5 +1,6 @@
 import mongoose = require('mongoose')
 import { getCourier } from './getCourier'
+import PackageBotError from './packageBotError'
 const trackPackage = require('./trackPackage')
 
 export interface PackageInterface {
@@ -30,24 +31,27 @@ class Package implements PackageInterface {
 
     constructor(data: packageData) {
         if (data.packageNum == undefined) {
-            throw new Error('You did not specify the package number!\nProper usage `(p!add / p!track) <package number> <courier>`').message
+            throw new PackageBotError(
+                'You did not specify the package number!\nProper usage `(p!add / p!track) <package number> <courier>`'
+            )
         }
 
         var tempCourier: string = data.courier.toLowerCase()
 
         if (!couriers.includes(tempCourier)) {
-            throw new Error(`We don't support the courier "${data.courier}"!\nType \`p!couriers\` to see which couriers we support!`)
-                .message
+            throw new PackageBotError(
+                `We don't support the courier "${data.courier}"!\nType \`p!couriers\` to see which couriers we support!`
+            )
         }
 
         if (tempCourier == '') {
             var matchCourier: string[] = getCourier(data.packageNum)
             if (matchCourier.length == 0) {
-                throw new Error(
+                throw new PackageBotError(
                     `Couldn't match any courier to this package number!\nTry specifying the courier or check the list of supported couriers.`
-                ).message
+                )
             } else if (matchCourier.length > 1) {
-                throw new Error(`Your tracking number format matches multiple couriers!\tPlease specify the courier`).message
+                throw new PackageBotError(`Your tracking number format matches multiple couriers!\tPlease specify the courier`)
             } else {
                 tempCourier = matchCourier[0]
             }
@@ -72,7 +76,7 @@ class Package implements PackageInterface {
             this.status = currentStatus
             return currentStatus
         } catch (err) {
-            throw new Error(err).message
+            throw err
         }
     }
 }

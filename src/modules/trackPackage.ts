@@ -3,6 +3,7 @@ export {}
 const trackDPD = require('./trackDPD')
 const trackGLS = require('./trackGLS')
 const trackUPS = require('./trackUPS')
+import PackageBotError from './packageBotError'
 import { getSettings } from './settings'
 
 const trackPackage = async (packageNum: string, courier: string) => {
@@ -23,8 +24,10 @@ const trackPackage = async (packageNum: string, courier: string) => {
     }
 
     if (status[1] != '') {
-        throw new Error(`Incorrect ${courier} package tracking number (${packageNum})!
-{footer}Make sure to check if the package number is correct!`).message
+        throw new PackageBotError(
+            `Incorrect ${courier} package tracking number (${packageNum})!`,
+            `Make sure to check if the package number is correct!`
+        )
     }
 
     return status[0]

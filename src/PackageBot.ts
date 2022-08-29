@@ -3,6 +3,7 @@
 require('dotenv').config({ path: __dirname + '/../.env' })
 
 import { MessageEmbed, TextChannel } from 'discord.js'
+import PackageBotError from './modules/packageBotError'
 import sendStatus from './modules/sendStatus'
 import { setLanguage } from './modules/setLanguage'
 import { getSettings } from './modules/settings'
@@ -147,11 +148,10 @@ client.on('messageCreate', async (message: any) => {
         } catch (err) {
             await message.delete()
 
-            const errorFooter = err.split('{footer}')[1]
-            if (errorFooter != undefined) {
-                sendStatus('ERROR', message.channel, err.split('{footer}')[0], { timeout: 5000, footer: errorFooter })
+            if (err instanceof PackageBotError) {
+                sendStatus('ERROR', message.channel, err.errorMsgDescription, { timeout: 5000, footer: err.errorMsgFooter })
             } else {
-                sendStatus('ERROR', message.channel, err, { timeout: 5000 })
+                sendStatus('ERROR', message.channel, 'An error has occurred', { timeout: 10000 })
             }
         }
     }
@@ -207,11 +207,10 @@ client.on('messageCreate', async (message: any) => {
                 {}
             )
         } catch (err) {
-            const errorFooter = err.includes('{footer}') ? err.split('{footer}')[1] : undefined
-            if (errorFooter != undefined) {
-                sendStatus('ERROR', message.channel, err.split('{footer}')[0], { timeout: 5000, footer: errorFooter })
+            if (err instanceof PackageBotError) {
+                sendStatus('ERROR', message.channel, err.errorMsgDescription, { timeout: 5000, footer: err.errorMsgFooter })
             } else {
-                sendStatus('ERROR', message.channel, err, { timeout: 5000 })
+                sendStatus('ERROR', message.channel, 'An error has occurred', { timeout: 10000 })
             }
             await message.delete()
         }
@@ -261,7 +260,15 @@ client.on('messageCreate', async (message: any) => {
 
         for (var i: number = 1; i <= addAmount; i++) {
             var pcg = new Package({ packageNum: i, courier: 'dpd', note: i.toString(), status: ['test', 'test', 'test', 'test'] })
-            await addPackage(pcg, message.channel, true)
+            try {
+                await addPackage(pcg, message.channel, true)
+            } catch (err) {
+                if (err instanceof PackageBotError) {
+                    sendStatus('ERROR', message.channel, err.errorMsgDescription, { timeout: 5000, footer: err.errorMsgFooter })
+                } else {
+                    sendStatus('ERROR', message.channel, 'An error has occurred', { timeout: 10000 })
+                }
+            }
         }
     }
 

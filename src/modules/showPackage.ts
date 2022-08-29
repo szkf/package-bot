@@ -1,4 +1,5 @@
 import { MessageEmbed, TextChannel } from 'discord.js'
+import PackageBotError from './packageBotError'
 import { PackageInterface } from './packageClass'
 import sendMessage from './sendMessage'
 import sendStatus from './sendStatus'
@@ -77,11 +78,11 @@ const showPackage = async (pcg: PackageInterface, channel: TextChannel, status: 
                 sendStatus('SUCCESS', channel, `Succesfully added a package to your tracking list!\nType \`${prefix}list\` to view it!`, {})
             } catch (err) {
                 showPackage(pcg, channel, status)
-                const errorFooter = err.split('{footer}')[1]
-                if (errorFooter != undefined) {
-                    sendStatus('ERROR', channel, err.split('{footer}')[0], { timeout: 5000, footer: errorFooter })
-                } else {
-                    sendStatus('ERROR', channel, err, { timeout: 5000 })
+                if (err instanceof PackageBotError)
+                    sendStatus('ERROR', channel, err.errorMsgDescription, { timeout: 5000, footer: err.errorMsgFooter })
+                else {
+                    console.error(err)
+                    sendStatus('ERROR', channel, 'An error has uccurred', { timeout: 10000 })
                 }
             }
             return

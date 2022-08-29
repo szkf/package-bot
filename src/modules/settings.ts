@@ -23,14 +23,14 @@ export const updateSettings = async (lang: string = '') => {
         try {
             await newSettings.save()
         } catch (err) {
-            console.log(err)
+            throw err
         }
     } else {
         try {
             mongoose.set('useFindAndModify', false)
             await SettingsModel.findOneAndUpdate({ id: 0 }, { id: 0, lang: lang == '' ? exists.lang : lang })
         } catch (err) {
-            console.log(err)
+            throw err
         }
     }
 }
@@ -44,7 +44,7 @@ export const getSettings = async (): Promise<Settings> => {
         try {
             await newSettings.save()
         } catch (err) {
-            console.log(err)
+            throw err
         }
 
         return { id: 0, lang: 'EN' }

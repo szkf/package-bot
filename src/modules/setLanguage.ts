@@ -1,6 +1,7 @@
 export {}
 
 import { MessageEmbed, TextChannel } from 'discord.js'
+import PackageBotError from './packageBotError'
 import sendMessage from './sendMessage'
 import sendStatus from './sendStatus'
 import { getSettings, updateSettings } from './settings'
@@ -34,7 +35,11 @@ export const setLanguage = async (channel: TextChannel) => {
         await updateSettings(languageTxt[returnVal.actionIndx])
         sendStatus('SUCCESS', channel, `Changed language to ${languageFullTxt[returnVal.actionIndx]}`, { timeout: 10000 })
     } catch (err) {
-        console.log(err)
+        if (err instanceof PackageBotError) {
+            sendStatus('ERROR', channel, err.errorMsgDescription, { timeout: 5000, footer: err.errorMsgFooter })
+        } else {
+            sendStatus('ERROR', channel, 'An error has occurred', { timeout: 10000 })
+        }
     }
 
     return
