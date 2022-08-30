@@ -291,7 +291,6 @@ export default client
 
 var { Package } = require('./modules/packageClass')
 var addPackage = require('./modules/addPackage')
-//var sendMessage = require('./modules/sendMessage')
 var showList = require('./modules/showList')
 var showPackage = require('./modules/showPackage')
 var checkStatus = require('./modules/checkStatus')
