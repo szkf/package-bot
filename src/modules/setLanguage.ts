@@ -39,6 +39,7 @@ export const setLanguage = async (channel: TextChannel) => {
             sendStatus('ERROR', channel, err.errorMsgDescription, { timeout: 5000, footer: err.errorMsgFooter })
         } else {
             sendStatus('ERROR', channel, 'An error has occurred', { timeout: 10000 })
+            console.error(err)
         }
     }
 

@@ -23,7 +23,7 @@ const trackPackage = async (packageNum: string, courier: string) => {
             break
     }
 
-    if (status[1] != '') {
+    if (status[1] != '' || status[0].length == 0) {
         throw new PackageBotError(
             `Incorrect ${courier} package tracking number (${packageNum})!`,
             `Make sure to check if the package number is correct!`
