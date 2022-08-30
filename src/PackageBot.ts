@@ -251,9 +251,12 @@ client.on('messageCreate', async (message: any) => {
 
     /*
         DEBUG
+        - disabled by default
+        - use only for testing purposes
     */
 
     if (message.content.toLowerCase().startsWith(`${debugPrefix} add`)) {
+        /*
         const addAmount: number = parseInt(message.content.split(' ')[2])
 
         for (var i: number = 1; i <= addAmount; i++) {
@@ -268,6 +271,7 @@ client.on('messageCreate', async (message: any) => {
                 }
             }
         }
+        */
     }
 
     /*
