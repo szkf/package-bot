@@ -150,6 +150,7 @@ client.on('messageCreate', async (message: any) => {
                 sendStatus('ERROR', message.channel, err.errorMsgDescription, { timeout: 5000, footer: err.errorMsgFooter })
             } else {
                 sendStatus('ERROR', message.channel, 'An error has occurred', { timeout: 10000 })
+                console.error(err)
             }
         }
     }
@@ -209,6 +210,7 @@ client.on('messageCreate', async (message: any) => {
                 sendStatus('ERROR', message.channel, err.errorMsgDescription, { timeout: 5000, footer: err.errorMsgFooter })
             } else {
                 sendStatus('ERROR', message.channel, 'An error has occurred', { timeout: 10000 })
+                console.error(err)
             }
             await message.delete()
         }
@@ -268,6 +270,7 @@ client.on('messageCreate', async (message: any) => {
                     sendStatus('ERROR', message.channel, err.errorMsgDescription, { timeout: 5000, footer: err.errorMsgFooter })
                 } else {
                     sendStatus('ERROR', message.channel, 'An error has occurred', { timeout: 10000 })
+                    console.error(err)
                 }
             }
         }
