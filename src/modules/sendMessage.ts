@@ -290,7 +290,8 @@ const sendMessage = async (
                     if (
                         reaction.emoji.name != null &&
                         reactions.includes(reaction.emoji.name) &&
-                        !['🗑️', '➡️', '⬅️', '✅', 'ℹ️', '❌', '📝', '◀️', '▶️'].includes(reaction.emoji.name)
+                        !['🗑️', '➡️', '⬅️', '✅', 'ℹ️', '❌', '📝', '◀️', '▶️'].includes(reaction.emoji.name) &&
+                        !letters.includes(reaction.emoji.name)
                     ) {
                         resetTimeout()
 
