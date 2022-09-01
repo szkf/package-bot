@@ -43,6 +43,7 @@ The latest version (v3.3.0) supports DPD, GLS and UPS.<br />Support for more cou
 ### Language Support
 As of version 3.3.0 PackageBot supports the following languages:
 * English
+* German (Only for UPS, support for DPD and GLS coming soon)
 * Polish
 
 Support for more coming soon.
