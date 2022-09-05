@@ -41,7 +41,7 @@ Notes are an easy way to differentiate between parcels.<br />They are displayed 
 The latest version (v3.3.2) supports DPD, GLS and UPS.<br />Support for more couriers coming soon!
 
 ### Language Support
-As of version 3.3.0 PackageBot supports the following languages:
+As of version 3.3.2 PackageBot supports the following languages:
 * English
 * German (Only for UPS, support for DPD and GLS coming soon)
 * Polish
