@@ -98,7 +98,7 @@ Supported languages: English, Polish, German (only for UPS parcels). More coming
 `p!version` or `p!v`
 
 ### Viewing the list of commands
-`p!help` displays the list of commands and describes their funciton
+`p!help` displays the list of commands and describes their function
 
 ## Setup
 #### Step 1
