@@ -89,7 +89,7 @@ PackageBot can also alert you of package status changes. To turn this feature on
 ### Changing the language
 `p!lang` or `p!language`
 
-Supported languages: English, Polish. More coming soon!
+Supported languages: English, Polish, German (only for UPS parcels). More coming soon!
 
 ### Viewing the list of supported couriers
 `p!couriers`
