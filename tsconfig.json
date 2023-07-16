@@ -5,7 +5,6 @@
         "lib": ["es6", "esnext"],
         "skipLibCheck": true,
         "sourceMap": true,
-        "watch": true,
         "outDir": "./dist",
         "moduleResolution": "node",
         "removeComments": true,
