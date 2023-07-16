@@ -1,4 +1,4 @@
-![](https://github.com/szkf/package-bot/blob/master/PackageBot.png)
+![](https://github.com/szkf/package-bot/blob/master/assets/PackageBotLogo.png)
 # PackageBot
 A Discord Parcel Tracking Bot
 
