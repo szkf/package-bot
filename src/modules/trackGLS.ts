@@ -25,7 +25,7 @@ const trackGLS = async (packageNum: string, lang: string) => {
         $('div.history-list-item-data').each(function () {
             tempPcgs.push($(this).text())
         })
-        if (tempPcgs != []) {
+        if (tempPcgs.length > 0) {
             for (var i = 0; i < tempPcgs.length; i++) {
                 var val = tempPcgs[i].split('\n')
                 var tempDate = val[1].split(' ')
