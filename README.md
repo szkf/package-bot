@@ -102,7 +102,7 @@ Supported languages: English, Polish, German (only for UPS parcels). More coming
 
 ## Setup
 #### Step 1
-Clone this repo and compile the typescript code using `npx tsc`.
+Clone this repository and compile the typescript code using `npx tsc`.
 #### Step 2
 Run `npm install` to install all required dependencies.
 #### Step 3
@@ -122,7 +122,7 @@ package-bot
 ```
 The `.env` file should contain the following:
 ```
-BOT_TOKEN=your_bot_token_copied_from_discord_dev_portal
+BOT_TOKEN=your_bot_token_copied_from_discord_developer_portal
 DB_CONNECTION=url_to_a_mongodb_database
 ```
 ***Note!*** Never share the bot token with anyone. <br />
