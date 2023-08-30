@@ -38,12 +38,11 @@ Notes are an easy way to differentiate between parcels.<br />They are displayed 
 <img src="https://github.com/szkf/package-bot/blob/master/assets/Notification.png" width="500px" />
 
 ### Supported Couriers
-The latest version (v3.3.2) supports DPD, GLS and UPS.<br />Support for more couriers coming soon!
+The latest version (v3.3.2) supports DPD, GLS.<br />Support for more couriers coming soon!
 
 ### Language Support
 As of version 3.3.2 PackageBot supports the following languages:
 * English
-* German (Only for UPS, support for DPD and GLS coming soon)
 * Polish
 
 Support for more coming soon.
