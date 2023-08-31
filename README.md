@@ -80,7 +80,7 @@ To edit a note select a package and press :pencil:.
 #### Viewing the full status history
 To view the full status history of a parcel select the packages and press :information_source:.
 
-### Turning the auto status checking on
+### Turning auto status checking on
 PackageBot can also alert you of package status changes. To turn this feature on type `p!init`.
 
 ***Note!*** This is not required for use of the tracking feature (`p!track`) but if not turned on the tracking list will not update.
